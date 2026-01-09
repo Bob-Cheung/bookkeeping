@@ -24,9 +24,8 @@ const SelectTime = (props) => {
 
   const handleConfirm = () => {
     // 组装选中的年月数据，传递给父组件（需父组件接收）
-    // props.onConfirmTime?.({ year, month });
-    console.log(year, month);
     props.handleOpenSelectTime(false);
+    props.handleSelectTime(year, month);
   };
 
   useEffect(() => {
@@ -37,7 +36,6 @@ const SelectTime = (props) => {
 
       // 优化：年份边界限制（确保当前年份在2026-2036范围内，超出则取边界值）
       const targetYear = Math.max(startYear, Math.min(currentYear, endYear));
-      console.log(targetYear, currentMonth);
 
       // 更新状态，同步当前日期
       setYear(targetYear);
