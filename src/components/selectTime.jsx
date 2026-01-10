@@ -6,10 +6,13 @@ import {
   Button
 } from '@mui/material';
 import WheelColumn from './wheelColumn';
+import { updateDays } from '../utils.js';
 
 const SelectTime = (props) => {
-  const [year, setYear] = useState(2025);
-  const [month, setMonth] = useState(6);
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [day, setDay] = useState(1);
+  const [days, setDays] = useState([]);
 
   // 1. 生成月份数据：1月到12月（固定数组，直接创建）
   const months = Array.from({ length: 12 }, (_, index) => index + 1);
@@ -24,31 +27,34 @@ const SelectTime = (props) => {
 
   const handleConfirm = () => {
     // 组装选中的年月数据，传递给父组件（需父组件接收）
-    props.handleOpenSelectTime(false);
-    props.handleSelectTime(year, month);
+    props.handleSelectTimeConfirm(year, month, day);
   };
 
   useEffect(() => {
+    const days = updateDays(props.currentYearMonth);
+    setDays(days);
+  }, []);
+
+  useEffect(() => {
     if (props.openSelectTime) {
-      const currentDate = new Date();
-      const currentYear = currentDate.getFullYear();
-      const currentMonth = currentDate.getMonth() + 1;
-
-      // 优化：年份边界限制（确保当前年份在2026-2036范围内，超出则取边界值）
-      const targetYear = Math.max(startYear, Math.min(currentYear, endYear));
-
       // 更新状态，同步当前日期
-      setYear(targetYear);
-      setMonth(currentMonth);
+      setYear(props.currentYearMonth.year);
+      setMonth(props.currentYearMonth.month);
     }
   }, [props.openSelectTime, startYear, endYear]);
+
+  useEffect(() => {
+    const days = updateDays({ year: year, month: month });
+    setDays(days);
+  }, [year, month]);
+
 
   return (
     <Drawer open={props.openSelectTime} anchor={"bottom"} onClose={() => props.handleOpenSelectTime(false)}>
       <Box sx={{ width: "100%", height: "40vh" }} role="presentation" >
         <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", }}>
           <Button onClick={() => props.handleOpenSelectTime(false)}>取消</Button>
-          <Typography >选择月份</Typography>
+          <Typography >选择日期</Typography>
           <Button onClick={handleConfirm}>确定</Button>
         </Box>
         <Box sx={{
@@ -57,8 +63,12 @@ const SelectTime = (props) => {
           gap: 6, // 新增：两个滚轮之间的间距
           py: 3 // 新增：上下内边距，优化布局
         }}>
-          <WheelColumn data={years} value={year} onChange={setYear} />
-          <WheelColumn data={months} value={month} onChange={setMonth} />
+          <WheelColumn data={years} value={year} text="年" onChange={setYear} />
+          <WheelColumn data={months} value={month} text="月" onChange={setMonth} />
+          {
+            props.showDays &&
+            <WheelColumn data={days} value={day} text="日" onChange={setDay} />
+          }
         </Box>
       </Box>
     </Drawer>

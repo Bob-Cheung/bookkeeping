@@ -21,7 +21,7 @@ const SCROLL_THROTTLE_DELAY = 100; // 滚动节流延迟：100毫秒
  * @param {Function} onChange - 选中值变化时的回调函数（返回新选中值）
  * @returns {React.Element} 渲染后的滚轮选择列组件
  */
-const WheelColumn = ({ data = [], value, onChange }) => {
+const WheelColumn = ({ data = [], value, onChange, text }) => {
   // 1. 容器DOM引用：用于获取/操作滚动容器的DOM属性（scrollTop等）
   // 作用：通过ref.current访问真实DOM，实现手动控制滚动位置和获取滚动状态
   const ref = useRef(null);
@@ -151,7 +151,7 @@ const WheelColumn = ({ data = [], value, onChange }) => {
           sx={itemBoxSx(item)}
         >
           {/* 选项内容：渲染data中的当前项 */}
-          {item}
+          {`${item} ${text}`}
         </Box>
       ))}
 

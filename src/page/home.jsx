@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import CelebrationIcon from '@mui/icons-material/Celebration';
 import { filterDataByDate } from '../utils.js';
 import DataCar from '../components/dataCar';
 import SelectTime from '../components/selectTime';
@@ -23,7 +24,9 @@ const Home = (props) => {
   // snackbar类型
   const [snackbarType, setSnackbarType] = useState("success");
   // 当前年月
-  const [currentYearMonth, setCurrentYearMonth] = useState({ year: 2025, month: 1 });
+  const [currentYearMonth, setCurrentYearMonth] = useState({ year: new Date().getFullYear(), month: new Date().getMonth() + 1 });
+  // 读取的所有数据
+  const [allData, setAllData] = useState(JSON.parse(localStorage.getItem("allData")) || []);
   // 需要显示的数据
   const [data, setData] = useState([]);
   // 当月总支出
@@ -37,7 +40,7 @@ const Home = (props) => {
 
 
   // 模拟数据
-  const allData = [
+  const testData = [
     // 时间，支出，收入，类型
     // { time: "2025-01-01", expenditure: 10000, income: 300, balance: 100, type: "餐饮" },
     { time: "2025-01-01", expenditure: 100, income: 300, type: "餐饮" },
@@ -55,6 +58,9 @@ const Home = (props) => {
     { time: "2026-01-09", expenditure: 300, income: 300, type: "交通" },
     { time: "2026-01-10", expenditure: 300, income: 300, type: "餐饮" },
     { time: "2026-01-11", expenditure: 300, income: 300, type: "交通" },
+    { time: "2026-01-12", expenditure: 300, income: 300, type: "交通" },
+    { time: "2026-01-13", expenditure: 300, income: 300, type: "交通" },
+    { time: "2026-01-14", expenditure: 300, income: 300, type: "交通" },
     { time: "2026-02-09", expenditure: 10000, income: 300, type: "餐饮" },
     { time: "2026-02-09", expenditure: 10000, income: 300, type: "餐饮" },
   ];
@@ -64,7 +70,8 @@ const Home = (props) => {
     if (storedData) {
       setData(storedData);
     } else {
-      localStorage.setItem("allData", JSON.stringify(allData));
+      localStorage.setItem("allData", JSON.stringify(testData));
+      setAllData(testData);
     };
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
@@ -91,7 +98,9 @@ const Home = (props) => {
 
   // 根据年月筛选数据
   const handleSelectTime = (year, month) => {
-    const currentMonthData = filterDataByDate({ year: year, month: month }, data);
+    console.log(year, month, allData);
+    const currentMonthData = filterDataByDate({ year: year, month: month }, allData);
+    console.log(currentMonthData);
     setData(currentMonthData);
     setCurrentYearMonth({ year, month });
     const totalExpenditure = currentMonthData.reduce((total, item) => total + item.expenditure, 0);
@@ -106,20 +115,25 @@ const Home = (props) => {
     setOpenSnackbar(newOpen);
   };
 
+  const handleSelectTimeConfirm = (year, month) => {
+    handleOpenSelectTime(false);
+    handleSelectTime(year, month);
+  }
+
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 2, }}>
         <Typography variant="h5" sx={{ color: '#f1fefe' }}>我爱记账</Typography>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: "10px 0" }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', }} onClick={() => handleOpenSelectTime(true)}>
           <Typography alignCenter sx={{ color: '#f1fefe' }}>{`${currentYearMonth.year}年${currentYearMonth.month}月`}</Typography>
-          <IconButton sx={{ padding: 0 }} onClick={() => handleOpenSelectTime(true)}>
+          <IconButton sx={{ padding: 0 }} >
             <ChevronRightIcon />
           </IconButton>
         </Box>
         <IconButton sx={{ padding: 0 }}>
-          <ChevronRightIcon />
+          <CelebrationIcon />
         </IconButton>
       </Box>
       <Paper sx={{ width: '100%', borderRadius: "10px" }}>
@@ -148,16 +162,18 @@ const Home = (props) => {
       </Box>
       {/* 时间选择组件 */}
       <SelectTime
+        currentYearMonth={currentYearMonth}
         openSelectTime={openSelectTime}
+        showDays={false}
         handleOpenSelectTime={handleOpenSelectTime}
-        handleSelectTime={handleSelectTime}
+        handleSelectTimeConfirm={handleSelectTimeConfirm}
       />
 
       {/* 提示组件 */}
       <SimpleSnackbar
         openSnackbar={openSnackbar}
         handleSnackbarClose={handleOpenSnackbar}
-        autoHideDuration={3000}
+        autoHideDuration={2000}
         severity={snackbarType}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         message={snackbarContent}

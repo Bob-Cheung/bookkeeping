@@ -5,8 +5,11 @@ import {
 	Typography,
 	Button,
 	IconButton,
-	Grid
+	Grid,
+	TextField
 } from '@mui/material';
+
+import Keyboard from '../components/keyboard';
 
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
@@ -101,7 +104,7 @@ const SelectTime = (props) => {
 
 				{/* 键盘 */}
 				<Box sx={{ width: '100%', height: "40vh", backgroundColor: 'yellow', position: "absolute", bottom: "0", display: openKeyboard ? "flex" : "none", }}>
-					键盘
+					<Keyboard />
 				</Box>
 			</Box>
 		</Drawer >
