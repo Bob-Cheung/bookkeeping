@@ -8,9 +8,10 @@ import {
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
+import LocalAtmIcon from '@mui/icons-material/LocalAtm';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 const DataCar = (props) => {
-
   const groupedData = props.data.reduce((acc, item) => {
     if (!acc[item.time]) {
       acc[item.time] = [];
@@ -31,13 +32,28 @@ const DataCar = (props) => {
     "餐饮": <RestaurantIcon />,
     "汽车": <DirectionsCarIcon />,
     "交通": <DirectionsBusIcon />,
+    "理财": <LocalAtmIcon />,
+    "工资": <AttachMoneyIcon />,
   };
   return (
     <>
       {Object.entries(groupedData).map(([date, items]) => {
         // console.log(date, items);
-        const totalExpenditure = items.reduce((sum, i) => sum + i.expenditure, 0);
-        const totalIncome = items.reduce((sum, i) => sum + i.income, 0);
+        let totalExpenditure = 0;
+        let totalIncome = 0;
+        let incomeState = false;
+        let expenditure = false;
+        // 检查items中是否有income
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].income) {
+            incomeState = true;
+            totalIncome += items[i].income;
+          };
+          if (items[i].expenditure) {
+            expenditure = true;
+            totalExpenditure += items[i].expenditure;
+          };
+        }
         return (
           <Paper
             key={date}
@@ -57,12 +73,18 @@ const DataCar = (props) => {
                 </Box>
 
                 <Box sx={{ display: 'flex' }}>
-                  <Typography sx={{ fontSize: 14, color: '#c1c1d0' }}>
-                    支出 {totalExpenditure}
-                  </Typography>
-                  <Typography sx={{ fontSize: 14, color: '#c1c1d0', paddingLeft: '10px' }}>
-                    收入 {totalIncome}
-                  </Typography>
+                  {
+                    expenditure &&
+                    <Typography sx={{ fontSize: 14, color: '#c1c1d0' }}>
+                      支出 {totalExpenditure}
+                    </Typography>
+                  }
+                  {
+                    incomeState &&
+                    <Typography sx={{ fontSize: 14, color: '#c1c1d0', paddingLeft: '10px' }}>
+                      收入 {totalIncome}
+                    </Typography>
+                  }
                 </Box>
               </Box>
 
@@ -70,6 +92,7 @@ const DataCar = (props) => {
 
               {/* 当天的每一条记录 */}
               {items.map((item, index) => (
+                // console.log(item),
                 <Box
                   key={index}
                   sx={{
@@ -80,14 +103,18 @@ const DataCar = (props) => {
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    {dataTypeIcon[item.type]}
+                    {dataTypeIcon[item.iconType]}
                     <Typography sx={{ ml: 2 }}>
-                      {item.type}
+                      {
+                        item.remark ? item.remark : item.iconType
+                      }
                     </Typography>
                   </Box>
 
                   <Typography>
-                    {item.expenditure}
+                    {
+                      item.expenditure ? "-" + item.expenditure : item.income
+                    }
                   </Typography>
                 </Box>
               ))}

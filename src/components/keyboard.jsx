@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button, TextField, InputAdornment } from '@mui/material';
+import { modifyData } from '../utils.js';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import BackspaceIcon from '@mui/icons-material/Backspace';
+import EventNoteIcon from '@mui/icons-material/EventNote';
 import SelectTime from './selectTime';
+
 
 const Keyboard = (props) => {
 	// 金额显示状态
@@ -19,6 +22,11 @@ const Keyboard = (props) => {
 	const [showEquals, setShowEquals] = useState(false);
 	// 是否显示日期选择器
 	const [openSelectTime, setOpenSelectTime] = useState(false);
+	// 备注
+	const [remark, setRemark] = useState("");
+	// 选择的时间，默认今天日期，格式为2025-10-01
+	const [selectedTime, setSelectedTime] = useState(new Date().toISOString().split('T')[0]);
+
 
 	// 处理数字按钮点击
 	const handleNumberClick = (digit) => {
@@ -145,11 +153,32 @@ const Keyboard = (props) => {
 		}
 
 		console.log(`完成操作，最终金额: ${formattedAmount}`);
-
-		// 这里可以添加提交或其他业务逻辑，将formattedAmount传递给父组件等
-
+		console.log("remark: ", remark, props.iconValue, props.transactionType);
+		let newData;
+		if (props.transactionType === 0) {
+			console.log("支出");
+			newData = {
+				time: selectedTime,
+				iconType: props.iconValue,
+				remark: remark,
+				expenditure: Number(formattedAmount),
+			};
+		} else {
+			console.log("收入");
+			newData = {
+				time: selectedTime,
+				iconType: props.iconValue,
+				remark: remark,
+				income: Number(formattedAmount),
+			};
+		};
+		// 保存修改数据
+		modifyData(newData);
+		props.handleUpdateData();
 		// 重置计算器
 		resetCalculator();
+		// 关闭记账页面
+		props.handleOpenAddDataPage(false);
 	};
 
 	// 处理小数点按钮
@@ -253,7 +282,8 @@ const Keyboard = (props) => {
 
 	const handleSelectTimeConfirm = (year, month, day) => {
 		console.log(`选择日期: ${year}-${month}-${day}`);
-		// handleSelectTime(year, month, day);
+		setSelectedTime(`${year}-${month}-${day}`);
+		setOpenSelectTime(false);
 	};
 
 	const handleOpenSelectTime = (open) => {
@@ -294,17 +324,19 @@ const Keyboard = (props) => {
 					{amount}
 				</Box>
 				<TextField
-					fullWidth
-					placeholder="备注：点击填写备注"
+					placeholder="点击填写备注"
 					variant="outlined"
 					size="small"
-					sx={{
-						'& .MuiOutlinedInput-root': {
-							borderRadius: 1,
-							'& fieldset': {
-								borderColor: '#e0e0e0',
-							}
-						}
+					sx={{ width: "100%" }}
+					onChange={(e) => setRemark(e.target.value)}
+					slotProps={{
+						input: {
+							startAdornment: (
+								<InputAdornment position="start">
+									<EventNoteIcon />
+								</InputAdornment>
+							),
+						},
 					}}
 				/>
 			</Box>
@@ -447,7 +479,10 @@ const Keyboard = (props) => {
 				</Button>
 			</Box>
 			<SelectTime
-				currentYearMonth={{ year: new Date().getFullYear(), month: new Date().getMonth() + 1 }}
+				currentYearMonth={{
+					year: new Date().getFullYear(),
+					month: (new Date().getMonth() + 1).toString().padStart(2, "0")
+				}}
 				openSelectTime={openSelectTime}
 				showDays={true}
 				handleOpenSelectTime={handleOpenSelectTime}

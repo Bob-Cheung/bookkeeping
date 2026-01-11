@@ -10,12 +10,18 @@ import { updateDays } from '../utils.js';
 
 const SelectTime = (props) => {
   const [year, setYear] = useState(new Date().getFullYear());
-  const [month, setMonth] = useState(new Date().getMonth() + 1);
-  const [day, setDay] = useState(1);
+  const [month, setMonth] = useState((new Date().getMonth() + 1).toString().padStart(2, "0"));
+  const [day, setDay] = useState("01");
   const [days, setDays] = useState([]);
 
-  // 1. 生成月份数据：1月到12月（固定数组，直接创建）
-  const months = Array.from({ length: 12 }, (_, index) => index + 1);
+  // 1. 生成月份数据：1月到12月（固定数组，直接创建）,小于10的月份前面补0
+  const months = Array.from({ length: 12 }, (_, index) => {
+    const month = index + 1;
+    // 补0逻辑：将数字转为字符串，目标长度2，不足则前面补0
+    return month.toString().padStart(2, '0');
+  });
+
+
   // 2. 生成年份数据：从2026年开始，到10年后（即2026+10=2036年）
   const startYear = 2024;
   const endYear = startYear + 10; // 10年后的年份

@@ -19,7 +19,6 @@ const SimpleBottomNavigation = (props) => {
 
   // 自定义记账函数
   const handleAdd = () => {
-    JSON.parse(localStorage.getItem("allData"));
     console.log('记账');
     props.handleOpenAddDataPage(true);
   }
@@ -73,6 +72,7 @@ const SimpleBottomNavigation = (props) => {
       <AddDatapage
         openAddDataPage={props.openAddDataPage}
         handleOpenAddDataPage={props.handleOpenAddDataPage}
+        handleUpdateData={props.handleUpdateData}
       />
     </>
   );

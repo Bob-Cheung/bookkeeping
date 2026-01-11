@@ -4,28 +4,37 @@
 const getPhoneData = (date) => {
 	// 模拟数据
 	let testData = [
-		// 时间，支出，收入，类型
-		// { time: "2025-01-01", expenditure: 10000, income: 300, balance: 100, type: "餐饮" },
-		{ time: "2025-01-01", expenditure: 100, income: 300, type: "餐饮" },
-		{ time: "2025-01-01", expenditure: 200, income: 300, type: "交通" },
-		{ time: "2025-01-03", expenditure: 10000, income: 300, type: "餐饮" },
-		{ time: "2025-01-03", expenditure: 10000, income: 300, type: "餐饮" },
-		{ time: "2025-01-04", expenditure: 10000, income: 300, type: "交通" },
-		{ time: "2025-02-04", expenditure: 10000, income: 300, type: "餐饮" },
-		{ time: "2025-02-04", expenditure: 10000, income: 300, type: "交通" },
-		{ time: "2025-03-04", expenditure: 10000, income: 300, type: "餐饮" },
-		{ time: "2025-04-04", expenditure: 10000, income: 300, type: "交通" },
-		{ time: "2026-01-04", expenditure: 5000, income: 300, type: "餐饮" },
-		{ time: "2026-01-04", expenditure: 100, income: 300, type: "交通" },
-		{ time: "2026-01-09", expenditure: 200, income: 300, type: "餐饮" },
-		{ time: "2026-01-09", expenditure: 300, income: 300, type: "交通" },
-		{ time: "2026-01-10", expenditure: 300, income: 300, type: "餐饮" },
-		{ time: "2026-01-11", expenditure: 300, income: 300, type: "交通" },
-		{ time: "2026-01-12", expenditure: 300, income: 300, type: "交通" },
-		{ time: "2026-01-13", expenditure: 300, income: 300, type: "交通" },
-		{ time: "2026-01-14", expenditure: 300, income: 300, type: "交通" },
-		{ time: "2026-02-09", expenditure: 10000, income: 300, type: "餐饮" },
-		{ time: "2026-02-09", expenditure: 10000, income: 300, type: "餐饮" },
+		// 时间，支出，收入，类型, 备注
+		// { time: "2025-01-01", expenditure: 支出, income: 收入, iconType: "餐饮" ,remark: "备注"},
+
+		{ time: "2026-02-09", expenditure: 20, iconType: "餐饮", remark: "螺狮粉" },
+		{ time: "2026-02-09", expenditure: 50, iconType: "交通", remark: "公交车" },
+		{ time: "2026-02-09", expenditure: 300, iconType: "汽车", remark: "加油" },
+		{ time: "2026-02-09", income: 100, iconType: "理财", remark: "基金" },
+		{ time: "2026-02-09", income: 200, iconType: "工资", remark: "打工" },
+
+		{ time: "2026-01-09", expenditure: 20, iconType: "餐饮", remark: "螺狮粉" },
+		{ time: "2026-01-09", expenditure: 50, iconType: "交通", remark: "公交车" },
+		{ time: "2026-01-09", expenditure: 300, iconType: "汽车", remark: "加油" },
+		{ time: "2026-01-09", income: 100, iconType: "理财", remark: "基金" },
+		{ time: "2026-01-09", income: 200, iconType: "工资", remark: "工资收入" },
+		{ time: "2026-01-08", expenditure: 20, iconType: "餐饮", remark: "螺狮粉" },
+		{ time: "2026-01-08", expenditure: 50, iconType: "交通", remark: "公交车" },
+		{ time: "2026-01-08", expenditure: 300, iconType: "汽车", remark: "加油" },
+		{ time: "2026-01-10", income: 100, iconType: "理财", remark: "基金" },
+		{ time: "2026-01-10", income: 200, iconType: "工资", remark: "工资收入" },
+
+		{ time: "2025-01-09", expenditure: 20, iconType: "餐饮", remark: "螺狮粉" },
+		{ time: "2025-01-09", expenditure: 50, iconType: "交通", remark: "公交车" },
+		{ time: "2025-01-09", expenditure: 300, iconType: "汽车", remark: "加油" },
+		{ time: "2025-01-09", income: 100, iconType: "理财", remark: "基金" },
+		{ time: "2025-01-09", income: 200, iconType: "工资", remark: "基金" },
+
+		{ time: "2025-02-09", expenditure: 20, iconType: "餐饮", remark: "螺狮粉" },
+		{ time: "2025-02-09", expenditure: 50, iconType: "交通", remark: "公交车" },
+		{ time: "2025-02-09", expenditure: 300, iconType: "汽车", remark: "加油" },
+		{ time: "2025-02-09", income: 100, iconType: "理财", remark: "基金" },
+		{ time: "2025-02-09", income: 200, iconType: "工资", remark: "基金" },
 	];
 
 	const storedData = JSON.parse(localStorage.getItem("allData"));
@@ -36,9 +45,25 @@ const getPhoneData = (date) => {
 		// 预算
 		localStorage.setItem("budget", JSON.stringify(1000));
 		// 当前时间
-		localStorage.setItem("currentYearMonth", JSON.stringify({ year: new Date().getFullYear(), month: new Date().getMonth() + 1 }));
+		sessionStorage.setItem("currentYearMonth", JSON.stringify({ year: new Date().getFullYear(), month: (new Date().getMonth() + 1).toString().padStart(2, "0") }));
 	};
 	return testData;
+};
+
+// 修改数据
+const modifyData = (data) => {
+	console.log(data);
+	// 支出
+	// {time: '2026-02-01', iconValue: '汽车', remark: '阿斯顿撒', expenditure: '66.00'}
+	// {time: '2026-02-01', iconValue: '汽车', remark: '阿斯顿撒', income: '66.00'}
+
+	let storedData = JSON.parse(localStorage.getItem("allData"));
+	if (storedData) {
+		storedData.push(data);
+	} else {
+		storedData = [data];
+	};
+	localStorage.setItem("allData", JSON.stringify(storedData));
 };
 // 根据日期筛选数据
 const filterDataByDate = (time, date) => {
@@ -48,7 +73,7 @@ const filterDataByDate = (time, date) => {
 			const itemDate = new Date(item.time);
 			const itemYear = itemDate.getFullYear();
 			const itemMonth = itemDate.getMonth() + 1;
-			return itemYear === time.year && itemMonth === time.month;
+			return itemYear === time.year && itemMonth === Number(time.month);
 		});
 	};
 	return newData;
@@ -69,7 +94,9 @@ function updateDays(currentYearMonth) {
 	// 生成1到daysInMonth的数组
 	const days = [];
 	for (let day = 1; day <= daysInMonth; day++) {
-		days.push(day);
+		// 小于10的日期前面补0
+		const dayStr = day < 10 ? `0${day}` : `${day}`;
+		days.push(dayStr);
 	}
 	// console.log(year, month, days);
 	return days;
@@ -95,5 +122,6 @@ function getDaysInMonth(year, month) {
 export {
 	getPhoneData,
 	filterDataByDate,
+	modifyData,
 	updateDays,
 };

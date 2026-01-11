@@ -8,7 +8,7 @@ import {
 
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CelebrationIcon from '@mui/icons-material/Celebration';
-import { filterDataByDate, getPhoneData } from '../utils.js';
+import { filterDataByDate } from '../utils.js';
 import DataCar from '../components/dataCar';
 import SelectTime from '../components/selectTime';
 import SimpleSnackbar from '../components/simpleSnackbar.jsx';
@@ -24,9 +24,9 @@ const Home = (props) => {
   // snackbar类型
   const [snackbarType, setSnackbarType] = useState("success");
   // 当前年月
-  const [currentYearMonth, setCurrentYearMonth] = useState(JSON.parse(localStorage.getItem("currentYearMonth")) || { year: new Date().getFullYear(), month: new Date().getMonth() + 1 });
-  // 读取的所有数据
-  const [allData, setAllData] = useState(getPhoneData() || []);
+  const [currentYearMonth, setCurrentYearMonth] = useState(JSON.parse(sessionStorage.getItem("currentYearMonth")) || { year: new Date().getFullYear(), month: (new Date().getMonth() + 1).toString().padStart(2, "0") });
+  // // 读取的所有数据
+  // const [props.allData, setprops.allData] = useState(getPhoneData() || []);
   // 需要显示的数据
   const [data, setData] = useState([]);
   // 当月总支出
@@ -39,28 +39,39 @@ const Home = (props) => {
   const [balance, setBalance] = useState(0);
 
 
+
   useEffect(() => {
     // const currentDate = new Date();
     // const currentYear = currentDate.getFullYear();
     // const currentMonth = currentDate.getMonth() + 1;
     // setCurrentYearMonth({ year: currentYear, month: currentMonth });
     // 根据今天的年月，筛选出当月的数据
-    const currentMonthData = filterDataByDate(currentYearMonth, allData);
+    const currentMonthData = filterDataByDate(currentYearMonth, props.allData);
+    console.log("所有数据", props.allData);
+    console.log("当月数据", currentMonthData);
     setData(currentMonthData);
     calculateTotal(currentMonthData);
-  }, []);
+  }, [props.allData]);
 
   // 计算当月总支出，总收入，结余
   const calculateTotal = (data) => {
-    // 计算总支出
-    const totalExpenditure = data.reduce((total, item) => total + item.expenditure, 0);
-    setTotalExpenditure(totalExpenditure);
-    // 计算总收入
-    const totalIncome = data.reduce((total, item) => total + item.income, 0);
-    setTotalIncome(totalIncome);
-    // 计算结余
+    let totalExpenditure = 0.0;
+    let totalIncome = 0.0;
+    for (const record of data) {
+      if ("expenditure" in record) {
+        totalExpenditure += record.expenditure;
+        setTotalExpenditure(totalExpenditure);
+      };
+
+      if (record.income !== undefined) {
+        totalIncome += record.income;
+        setTotalIncome(totalIncome);
+      };
+    }
     const balance = budget - totalExpenditure;
     setBalance(balance);
+
+
     if (balance < 0) {
       setSnackbarType("warning");
       setSnackbarContent("本月已超支，请控制消费！");
@@ -70,9 +81,9 @@ const Home = (props) => {
 
   // 根据年月筛选数据
   const handleSelectTime = (year, month) => {
-    console.log(year, month, allData);
-    localStorage.setItem("currentYearMonth", JSON.stringify({ year: year, month: month }));
-    const currentMonthData = filterDataByDate({ year: year, month: month }, allData);
+    console.log(year, month, props.allData);
+    sessionStorage.setItem("currentYearMonth", JSON.stringify({ year: year, month: month }));
+    const currentMonthData = filterDataByDate({ year: year, month: month }, props.allData);
     console.log(currentMonthData);
     setData(currentMonthData);
     setCurrentYearMonth({ year, month });
@@ -120,11 +131,15 @@ const Home = (props) => {
               <Typography variant="h4" sx={{ fontWeight: "bold", paddingTop: 1, paddingBottom: 1 }}>{budget}</Typography>
             </Box>
           </Box>
-          <Box>
-            <Typography variant="h8">月收入</Typography>
-            <Typography variant="h8" sx={{ paddingLeft: 1, color: "#51cf66" }}>{totalIncome}</Typography>
-            <Typography variant="h8" sx={{ paddingLeft: 10 }}>月结余</Typography>
-            <Typography variant="h8" sx={{ paddingLeft: 1, color: balance < 0 ? "#ff6b6b" : "#51cf66" }}>{balance}</Typography>
+          <Box sx={{ display: 'flex', justifyContent: "space-between" }}>
+            <Box>
+              <Typography variant="h8">月收入</Typography>
+              <Typography variant="h8" sx={{ paddingLeft: 1, color: "#51cf66" }}>{totalIncome}</Typography>
+            </Box>
+            <Box>
+              <Typography variant="h8" >月结余</Typography>
+              <Typography variant="h8" sx={{ paddingLeft: 1, color: balance < 0 ? "#ff6b6b" : "#51cf66" }}>{balance}</Typography>
+            </Box>
           </Box>
         </Box>
       </Paper >
