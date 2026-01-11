@@ -8,7 +8,7 @@ import {
 
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CelebrationIcon from '@mui/icons-material/Celebration';
-import { filterDataByDate } from '../utils.js';
+import { filterDataByDate, getPhoneData } from '../utils.js';
 import DataCar from '../components/dataCar';
 import SelectTime from '../components/selectTime';
 import SimpleSnackbar from '../components/simpleSnackbar.jsx';
@@ -26,7 +26,7 @@ const Home = (props) => {
   // 当前年月
   const [currentYearMonth, setCurrentYearMonth] = useState({ year: new Date().getFullYear(), month: new Date().getMonth() + 1 });
   // 读取的所有数据
-  const [allData, setAllData] = useState(JSON.parse(localStorage.getItem("allData")) || []);
+  const [allData, setAllData] = useState(getPhoneData() || []);
   // 需要显示的数据
   const [data, setData] = useState([]);
   // 当月总支出
@@ -39,52 +39,24 @@ const Home = (props) => {
   const [balance, setBalance] = useState(0);
 
 
-  // 模拟数据
-  const testData = [
-    // 时间，支出，收入，类型
-    // { time: "2025-01-01", expenditure: 10000, income: 300, balance: 100, type: "餐饮" },
-    { time: "2025-01-01", expenditure: 100, income: 300, type: "餐饮" },
-    { time: "2025-01-01", expenditure: 200, income: 300, type: "交通" },
-    { time: "2025-01-03", expenditure: 10000, income: 300, type: "餐饮" },
-    { time: "2025-01-03", expenditure: 10000, income: 300, type: "餐饮" },
-    { time: "2025-01-04", expenditure: 10000, income: 300, type: "交通" },
-    { time: "2025-02-04", expenditure: 10000, income: 300, type: "餐饮" },
-    { time: "2025-02-04", expenditure: 10000, income: 300, type: "交通" },
-    { time: "2025-03-04", expenditure: 10000, income: 300, type: "餐饮" },
-    { time: "2025-04-04", expenditure: 10000, income: 300, type: "交通" },
-    { time: "2026-01-04", expenditure: 5000, income: 300, type: "餐饮" },
-    { time: "2026-01-04", expenditure: 100, income: 300, type: "交通" },
-    { time: "2026-01-09", expenditure: 200, income: 300, type: "餐饮" },
-    { time: "2026-01-09", expenditure: 300, income: 300, type: "交通" },
-    { time: "2026-01-10", expenditure: 300, income: 300, type: "餐饮" },
-    { time: "2026-01-11", expenditure: 300, income: 300, type: "交通" },
-    { time: "2026-01-12", expenditure: 300, income: 300, type: "交通" },
-    { time: "2026-01-13", expenditure: 300, income: 300, type: "交通" },
-    { time: "2026-01-14", expenditure: 300, income: 300, type: "交通" },
-    { time: "2026-02-09", expenditure: 10000, income: 300, type: "餐饮" },
-    { time: "2026-02-09", expenditure: 10000, income: 300, type: "餐饮" },
-  ];
-
   useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem("allData"));
-    if (storedData) {
-      setData(storedData);
-    } else {
-      localStorage.setItem("allData", JSON.stringify(testData));
-      setAllData(testData);
-    };
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
     setCurrentYearMonth({ year: currentYear, month: currentMonth });
     // 根据今天的年月，筛选出当月的数据
-    const currentMonthData = filterDataByDate({ year: currentYear, month: currentMonth }, storedData);
+    const currentMonthData = filterDataByDate({ year: currentYear, month: currentMonth }, allData);
     setData(currentMonthData);
+    calculateTotal(currentMonthData);
+  }, []);
+
+  // 计算当月总支出，总收入，结余
+  const calculateTotal = (data) => {
     // 计算总支出
-    const totalExpenditure = currentMonthData.reduce((total, item) => total + item.expenditure, 0);
+    const totalExpenditure = data.reduce((total, item) => total + item.expenditure, 0);
     setTotalExpenditure(totalExpenditure);
     // 计算总收入
-    const totalIncome = currentMonthData.reduce((total, item) => total + item.income, 0);
+    const totalIncome = data.reduce((total, item) => total + item.income, 0);
     setTotalIncome(totalIncome);
     // 计算结余
     const balance = budget - totalExpenditure;
@@ -94,7 +66,7 @@ const Home = (props) => {
       setSnackbarContent("本月已超支，请控制消费！");
       handleOpenSnackbar(true);
     };
-  }, []);
+  };
 
   // 根据年月筛选数据
   const handleSelectTime = (year, month) => {
@@ -103,8 +75,7 @@ const Home = (props) => {
     console.log(currentMonthData);
     setData(currentMonthData);
     setCurrentYearMonth({ year, month });
-    const totalExpenditure = currentMonthData.reduce((total, item) => total + item.expenditure, 0);
-    setTotalExpenditure(totalExpenditure);
+    calculateTotal(currentMonthData);
   };
 
   const handleOpenSelectTime = (newOpen) => {

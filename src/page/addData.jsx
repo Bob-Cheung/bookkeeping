@@ -66,7 +66,8 @@ const SelectTime = (props) => {
 				{/* icon 列表 */}
 				<Box sx={{
 					width: "100%",
-					height: openKeyboard ? "50vh" : "auto",
+					height: openKeyboard ? `calc(90vh - ${400}px)` : "auto",
+					flex: '1',
 					overflowY: "auto",
 					padding: "10px",
 					display: "grid",
@@ -103,7 +104,7 @@ const SelectTime = (props) => {
 
 
 				{/* 键盘 */}
-				<Box sx={{ width: '100%', height: "40vh", backgroundColor: 'yellow', position: "absolute", bottom: "0", display: openKeyboard ? "flex" : "none", }}>
+				<Box sx={{ width: "100%", height: "400px", position: "fixed", bottom: "0", left: "0", right: "0", display: openKeyboard ? "flex" : "none", }}>
 					<Keyboard />
 				</Box>
 			</Box>

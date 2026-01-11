@@ -343,10 +343,9 @@ const Keyboard = (props) => {
 				<Button
 					variant="outlined"
 					sx={{ borderRadius: 1 }}
-					startIcon={<CalendarMonthIcon />}
 					onClick={() => handleOpenSelectTime(true)}
 				>
-					今天
+					<CalendarMonthIcon fontSize="small" />
 				</Button>
 
 				{/* 第二行：4 5 6 + */}
@@ -428,9 +427,8 @@ const Keyboard = (props) => {
 					variant="outlined"
 					sx={{ borderRadius: 1 }}
 					onClick={handleDeleteClick}
-					startIcon={<BackspaceIcon />}
 				>
-					删除
+					<BackspaceIcon />
 				</Button>
 				<Button
 					variant="contained"
