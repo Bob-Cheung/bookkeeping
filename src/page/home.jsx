@@ -24,7 +24,7 @@ const Home = (props) => {
   // snackbar类型
   const [snackbarType, setSnackbarType] = useState("success");
   // 当前年月
-  const [currentYearMonth, setCurrentYearMonth] = useState({ year: new Date().getFullYear(), month: new Date().getMonth() + 1 });
+  const [currentYearMonth, setCurrentYearMonth] = useState(JSON.parse(localStorage.getItem("currentYearMonth")) || { year: new Date().getFullYear(), month: new Date().getMonth() + 1 });
   // 读取的所有数据
   const [allData, setAllData] = useState(getPhoneData() || []);
   // 需要显示的数据
@@ -40,12 +40,12 @@ const Home = (props) => {
 
 
   useEffect(() => {
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth() + 1;
-    setCurrentYearMonth({ year: currentYear, month: currentMonth });
+    // const currentDate = new Date();
+    // const currentYear = currentDate.getFullYear();
+    // const currentMonth = currentDate.getMonth() + 1;
+    // setCurrentYearMonth({ year: currentYear, month: currentMonth });
     // 根据今天的年月，筛选出当月的数据
-    const currentMonthData = filterDataByDate({ year: currentYear, month: currentMonth }, allData);
+    const currentMonthData = filterDataByDate(currentYearMonth, allData);
     setData(currentMonthData);
     calculateTotal(currentMonthData);
   }, []);
@@ -71,6 +71,7 @@ const Home = (props) => {
   // 根据年月筛选数据
   const handleSelectTime = (year, month) => {
     console.log(year, month, allData);
+    localStorage.setItem("currentYearMonth", JSON.stringify({ year: year, month: month }));
     const currentMonthData = filterDataByDate({ year: year, month: month }, allData);
     console.log(currentMonthData);
     setData(currentMonthData);

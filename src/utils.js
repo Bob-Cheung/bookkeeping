@@ -35,6 +35,8 @@ const getPhoneData = (date) => {
 		localStorage.setItem("allData", JSON.stringify(testData));
 		// 预算
 		localStorage.setItem("budget", JSON.stringify(1000));
+		// 当前时间
+		localStorage.setItem("currentYearMonth", JSON.stringify({ year: new Date().getFullYear(), month: new Date().getMonth() + 1 }));
 	};
 	return testData;
 };
