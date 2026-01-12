@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField, InputAdornment } from '@mui/material';
-import { modifyData } from '../utils.js';
+import { addData } from '../utils.js';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import EventNoteIcon from '@mui/icons-material/EventNote';
@@ -175,7 +175,7 @@ const Keyboard = (props) => {
 			};
 		};
 		// 保存修改数据
-		modifyData(newData);
+		addData(newData);
 		props.handleUpdateData();
 		// 重置计算器
 		resetCalculator();

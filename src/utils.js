@@ -51,7 +51,7 @@ const getPhoneData = (date) => {
 };
 
 // 添加数据
-const modifyData = (data) => {
+const addData = (data) => {
 	console.log(data);
 	// 支出
 	// {time: '2026-02-01', iconValue: '汽车', remark: '阿斯顿撒', expenditure: '66.00'}
@@ -74,6 +74,36 @@ const deleteData = (id) => {
 		localStorage.setItem("allData", JSON.stringify(storedData));
 	} else {
 		console.log("删除失败");
+	};
+};
+
+// 修改数据
+const modifyData = (id, type, newData) => {
+	console.log(id, type, newData);
+	let storedData = JSON.parse(localStorage.getItem("allData"));
+	if (storedData) {
+		storedData = storedData.map(item => {
+			if (item.id === id) {
+				console.log("需要修改的数据", item);
+				// return newData;
+				let data = item;
+				if (type === "remark") {
+					data.remark = newData;
+				} else if (type === "expenditure") {
+					delete data.income;
+					data.expenditure = newData;
+				} else if (type === "income") {
+					delete data.expenditure;
+					data.income = newData;
+				};
+				return data;
+			} else {
+				return item;
+			};
+		});
+		localStorage.setItem("allData", JSON.stringify(storedData));
+	} else {
+		console.log("修改失败");
 	};
 };
 
@@ -134,7 +164,8 @@ function getDaysInMonth(year, month) {
 export {
 	getPhoneData,
 	filterDataByDate,
-	modifyData,
+	addData,
 	deleteData,
+	modifyData,
 	updateDays,
 };

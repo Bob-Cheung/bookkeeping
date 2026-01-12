@@ -1,10 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { deleteData } from '../utils.js';
+import { deleteData, modifyData } from '../utils.js';
 import {
   Box,
   Typography,
   Paper,
   Button,
+  TextField,
 } from '@mui/material';
 
 import RestaurantIcon from '@mui/icons-material/Restaurant';
@@ -14,6 +15,46 @@ import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 const DataCar = (props) => {
+  const [activeRemarkInputId, setActiveRemarkInputId] = useState(null);
+  const [remarkValue, setRemarkValue] = useState('');
+  const [activeexpenditureInputId, setActiveexpenditureInputId] = useState(null);
+  const [expenditureValue, setExpenditureValue] = useState('');
+
+  const handleTextClick = (itemId) => {
+    setActiveexpenditureInputId(null);
+    setActiveRemarkInputId(itemId);
+  };
+
+  const handleexpenditureClick = (itemId) => {
+    setActiveRemarkInputId(null);
+    setActiveexpenditureInputId(itemId);
+  };
+
+  // 聚焦
+  const handleRemarkFocus = (itemId, value) => {
+    setRemarkValue(value);
+  };
+  // 失焦
+  const handleRemarkBlur = (itemId) => {
+    setActiveRemarkInputId(null);
+    modifyData(itemId, 'remark', remarkValue);
+    props.handleUpdateData();
+  };
+
+  const handleExpenditureFocus = (itemId, value) => {
+    setExpenditureValue(value);
+  };
+  const handleExpenditureBlur = (itemId) => {
+    setActiveexpenditureInputId(null);
+    let type;
+    if (Number(expenditureValue) > 0) {
+      type = 'income';
+    } else {
+      type = 'expenditure';
+    }
+    modifyData(itemId, type, Math.abs(Number(expenditureValue)));
+    props.handleUpdateData();
+  };
 
   const handleDelete = (id) => {
     deleteData(id);
@@ -99,38 +140,67 @@ const DataCar = (props) => {
               <Box sx={{ height: '1px', bgcolor: '#c1c1d0', my: 1 }} />
 
               {/* 当天的每一条记录 */}
-              {items.map((item, index) => (
+              {items.map((item, index) => {
                 // console.log("当月每条数据", item),
-                <Box
-                  key={index}
-                  sx={{
-                    height: 50,
-                    display: 'flex',
-                    // justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+                const displayText = item.remark ? item.remark : item.iconType;
+                return (
+                  <Box
+                    key={index.id}
+                    sx={{
+                      height: 50,
+                      display: 'flex',
+                      // justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
 
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      {dataTypeIcon[item.iconType]}
-                      <Typography sx={{ ml: 2 }}>
-                        {
-                          item.remark ? item.remark : item.iconType
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        {dataTypeIcon[item.iconType]}
+                        {activeRemarkInputId !== item.id &&
+                          <Typography sx={{ ml: 2 }} onClick={() => handleTextClick(item.id)}>{displayText}</Typography>
                         }
-                      </Typography>
+
+                        {activeRemarkInputId === item.id &&
+                          <TextField
+                            variant="outlined"
+                            size="small"
+                            sx={{ width: '100px' }}
+                            value={remarkValue}
+                            autoFocus
+                            onFocus={() => handleRemarkFocus(item.id, displayText)}
+                            onBlur={() => handleRemarkBlur(item.id)}
+                            onChange={(e) => setRemarkValue(e.target.value)}
+                          />
+                        }
+
+                      </Box>
+                      <Box onClick={() => handleexpenditureClick(item.id)}>
+                        {
+                          activeexpenditureInputId !== item.id &&
+                          <Typography>{item.expenditure ? "-" + item.expenditure : item.income}</Typography>
+                        }
+                        {activeexpenditureInputId === item.id &&
+                          <TextField
+                            // placeholder={item.expenditure ? "-" + item.expenditure : item.income}
+                            variant="outlined"
+                            size="small"
+                            sx={{ width: '100px' }}
+                            type='number'
+                            autoFocus
+                            value={expenditureValue}
+                            onChange={(e) => setExpenditureValue(e.target.value)}
+                            onFocus={() => handleExpenditureFocus(item.id, item.expenditure ? "-" + item.expenditure : item.income)}
+                            onBlur={() => handleExpenditureBlur(item.id)}
+                          />
+                        }
+                      </Box>
+
+                      <Button sx={{ position: 'relative', right: 0 }} onClick={() => handleDelete(item.id)}>删除</Button>
                     </Box>
-
-                    <Typography>
-                      {
-                        item.expenditure ? "-" + item.expenditure : item.income
-                      }
-                    </Typography>
-
-                    <Button sx={{ position: 'relative', right: 0 }} onClick={() => handleDelete(item.id)}>删除</Button>
                   </Box>
-                </Box>
-              ))}
+                );
+              })}
             </Box>
           </Paper>
         );
