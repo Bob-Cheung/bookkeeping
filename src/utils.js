@@ -59,7 +59,7 @@ const addData = (data) => {
 
 	let storedData = JSON.parse(localStorage.getItem("allData"));
 	if (storedData) {
-		storedData.push(data);
+		storedData.unshift(data);
 	} else {
 		storedData = [data];
 	};

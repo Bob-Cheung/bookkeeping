@@ -3,7 +3,8 @@ import {
   Box,
   Typography,
   Paper,
-  IconButton
+  IconButton,
+  TextField,
 } from '@mui/material';
 
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -35,10 +36,16 @@ const Home = (props) => {
   const [totalIncome, setTotalIncome] = useState(0);
   // 预算
   const [budget, setBudget] = useState(JSON.parse(localStorage.getItem("budget")) || 0);
+  const [budgetInputShow, setBudgetInputShow] = useState(false);
   // 结余
   const [balance, setBalance] = useState(0);
 
 
+
+  const handleBudgetChange = (value) => {
+    setBudget(value);
+    localStorage.setItem("budget", JSON.stringify(value));
+  };
 
   useEffect(() => {
     // const currentDate = new Date();
@@ -126,9 +133,30 @@ const Home = (props) => {
               <Typography variant="h8" sx={{ color: "#f55846" }}>月支出</Typography>
               <Typography variant="h4" sx={{ fontWeight: "bold", paddingTop: 1, paddingBottom: 1 }}>{totalExpenditure}</Typography>
             </Box>
-            <Box>
+            <Box sx={{ display: 'flex', flexDirection: "column", alignItems: "flex-end" }}>
               <Typography variant="h8" sx={{ color: "#f55846" }}>月预算</Typography>
-              <Typography variant="h4" sx={{ fontWeight: "bold", paddingTop: 1, paddingBottom: 1 }}>{budget}</Typography>
+              {
+                !budgetInputShow &&
+                <Typography variant="h4" sx={{ fontWeight: "bold", paddingTop: 1, paddingBottom: 1 }} onClick={() => setBudgetInputShow(true)}>{budget}</Typography>
+              }
+              {
+                budgetInputShow &&
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  sx={{ width: '100px' }}
+                  type='number'
+                  autoFocus
+                  value={budget}
+                  // value={expenditureValue}
+                  onChange={(e) => handleBudgetChange(e.target.value)}
+                  // onFocus={() => handleExpenditureFocus(item.id, item.expenditure ? "-" + item.expenditure : item.income)}
+                  onBlur={() => {
+                    setBudgetInputShow(false);
+                    props.handleUpdateData();
+                  }}
+                />
+              }
             </Box>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: "space-between" }}>
