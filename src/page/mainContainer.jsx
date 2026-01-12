@@ -22,8 +22,7 @@ const MainContainer = () => {
     setAllData(newData);
   };
 
-  useEffect(() => {
-  }, [pageValue])
+
   const handleOpenAddDataPage = (newOpen) => {
     setOpenAddDataPage(newOpen);
   };
@@ -35,7 +34,7 @@ const MainContainer = () => {
       overflow: 'hidden',
       padding: '0 20px',
     }}>
-      {pageValue === 0 && <HomePage allData={allData} />}
+      {pageValue === 0 && <HomePage allData={allData} handleUpdateData={handleUpdateData} />}
       {pageValue === 1 && <ChartPage />}
       {pageValue === 3 && <AssetsPage />}
       {pageValue === 4 && <MyPage />}

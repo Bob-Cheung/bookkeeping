@@ -158,6 +158,7 @@ const Keyboard = (props) => {
 		if (props.transactionType === 0) {
 			console.log("支出");
 			newData = {
+				id: crypto.randomUUID(),
 				time: selectedTime,
 				iconType: props.iconValue,
 				remark: remark,
@@ -166,6 +167,7 @@ const Keyboard = (props) => {
 		} else {
 			console.log("收入");
 			newData = {
+				id: crypto.randomUUID(),
 				time: selectedTime,
 				iconType: props.iconValue,
 				remark: remark,

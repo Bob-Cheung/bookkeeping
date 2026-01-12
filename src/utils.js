@@ -7,34 +7,34 @@ const getPhoneData = (date) => {
 		// 时间，支出，收入，类型, 备注
 		// { time: "2025-01-01", expenditure: 支出, income: 收入, iconType: "餐饮" ,remark: "备注"},
 
-		{ time: "2026-02-09", expenditure: 20, iconType: "餐饮", remark: "螺狮粉" },
-		{ time: "2026-02-09", expenditure: 50, iconType: "交通", remark: "公交车" },
-		{ time: "2026-02-09", expenditure: 300, iconType: "汽车", remark: "加油" },
-		{ time: "2026-02-09", income: 100, iconType: "理财", remark: "基金" },
-		{ time: "2026-02-09", income: 200, iconType: "工资", remark: "打工" },
+		{ id: 1, time: "2026-02-09", expenditure: 20, iconType: "餐饮", remark: "螺狮粉" },
+		{ id: 2, time: "2026-02-09", expenditure: 50, iconType: "交通", remark: "公交车" },
+		{ id: 3, time: "2026-02-09", expenditure: 300, iconType: "汽车", remark: "加油" },
+		{ id: 4, time: "2026-02-09", income: 100, iconType: "理财", remark: "基金" },
+		{ id: 5, time: "2026-02-09", income: 200, iconType: "工资", remark: "打工" },
 
-		{ time: "2026-01-09", expenditure: 20, iconType: "餐饮", remark: "螺狮粉" },
-		{ time: "2026-01-09", expenditure: 50, iconType: "交通", remark: "公交车" },
-		{ time: "2026-01-09", expenditure: 300, iconType: "汽车", remark: "加油" },
-		{ time: "2026-01-09", income: 100, iconType: "理财", remark: "基金" },
-		{ time: "2026-01-09", income: 200, iconType: "工资", remark: "工资收入" },
-		{ time: "2026-01-08", expenditure: 20, iconType: "餐饮", remark: "螺狮粉" },
-		{ time: "2026-01-08", expenditure: 50, iconType: "交通", remark: "公交车" },
-		{ time: "2026-01-08", expenditure: 300, iconType: "汽车", remark: "加油" },
-		{ time: "2026-01-10", income: 100, iconType: "理财", remark: "基金" },
-		{ time: "2026-01-10", income: 200, iconType: "工资", remark: "工资收入" },
+		{ id: 6, time: "2026-01-09", expenditure: 20, iconType: "餐饮", remark: "螺狮粉" },
+		{ id: 7, time: "2026-01-09", expenditure: 50, iconType: "交通", remark: "公交车" },
+		{ id: 8, time: "2026-01-09", expenditure: 300, iconType: "汽车", remark: "加油" },
+		{ id: 9, time: "2026-01-09", income: 100, iconType: "理财", remark: "基金" },
+		{ id: 10, time: "2026-01-09", income: 200, iconType: "工资", remark: "工资收入" },
+		{ id: 11, time: "2026-01-08", expenditure: 20, iconType: "餐饮", remark: "螺狮粉" },
+		{ id: 12, time: "2026-01-08", expenditure: 50, iconType: "交通", remark: "公交车" },
+		{ id: 13, time: "2026-01-08", expenditure: 300, iconType: "汽车", remark: "加油" },
+		{ id: 14, time: "2026-01-10", income: 100, iconType: "理财", remark: "基金" },
+		{ id: 15, time: "2026-01-10", income: 200, iconType: "工资", remark: "工资收入" },
 
-		{ time: "2025-01-09", expenditure: 20, iconType: "餐饮", remark: "螺狮粉" },
-		{ time: "2025-01-09", expenditure: 50, iconType: "交通", remark: "公交车" },
-		{ time: "2025-01-09", expenditure: 300, iconType: "汽车", remark: "加油" },
-		{ time: "2025-01-09", income: 100, iconType: "理财", remark: "基金" },
-		{ time: "2025-01-09", income: 200, iconType: "工资", remark: "基金" },
+		{ id: 16, time: "2025-01-09", expenditure: 20, iconType: "餐饮", remark: "螺狮粉" },
+		{ id: 17, time: "2025-01-09", expenditure: 50, iconType: "交通", remark: "公交车" },
+		{ id: 18, time: "2025-01-09", expenditure: 300, iconType: "汽车", remark: "加油" },
+		{ id: 19, time: "2025-01-09", income: 100, iconType: "理财", remark: "基金" },
+		{ id: 20, time: "2025-01-09", income: 200, iconType: "工资", remark: "基金" },
 
-		{ time: "2025-02-09", expenditure: 20, iconType: "餐饮", remark: "螺狮粉" },
-		{ time: "2025-02-09", expenditure: 50, iconType: "交通", remark: "公交车" },
-		{ time: "2025-02-09", expenditure: 300, iconType: "汽车", remark: "加油" },
-		{ time: "2025-02-09", income: 100, iconType: "理财", remark: "基金" },
-		{ time: "2025-02-09", income: 200, iconType: "工资", remark: "基金" },
+		{ id: 21, time: "2025-02-09", expenditure: 20, iconType: "餐饮", remark: "螺狮粉" },
+		{ id: 22, time: "2025-02-09", expenditure: 50, iconType: "交通", remark: "公交车" },
+		{ id: 23, time: "2025-02-09", expenditure: 300, iconType: "汽车", remark: "加油" },
+		{ id: 24, time: "2025-02-09", income: 100, iconType: "理财", remark: "基金" },
+		{ id: 25, time: "2025-02-09", income: 200, iconType: "工资", remark: "基金" },
 	];
 
 	const storedData = JSON.parse(localStorage.getItem("allData"));
@@ -50,7 +50,7 @@ const getPhoneData = (date) => {
 	return testData;
 };
 
-// 修改数据
+// 添加数据
 const modifyData = (data) => {
 	console.log(data);
 	// 支出
@@ -65,6 +65,18 @@ const modifyData = (data) => {
 	};
 	localStorage.setItem("allData", JSON.stringify(storedData));
 };
+
+// 删除数据
+const deleteData = (id) => {
+	let storedData = JSON.parse(localStorage.getItem("allData"));
+	if (storedData) {
+		storedData = storedData.filter(item => item.id !== id);
+		localStorage.setItem("allData", JSON.stringify(storedData));
+	} else {
+		console.log("删除失败");
+	};
+};
+
 // 根据日期筛选数据
 const filterDataByDate = (time, date) => {
 	let newData = [];
@@ -123,5 +135,6 @@ export {
 	getPhoneData,
 	filterDataByDate,
 	modifyData,
+	deleteData,
 	updateDays,
 };

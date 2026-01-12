@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { deleteData } from '../utils.js';
 import {
   Box,
   Typography,
   Paper,
+  Button,
 } from '@mui/material';
 
 import RestaurantIcon from '@mui/icons-material/Restaurant';
@@ -12,6 +14,12 @@ import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 const DataCar = (props) => {
+
+  const handleDelete = (id) => {
+    deleteData(id);
+    props.handleUpdateData();
+  };
+
   const groupedData = props.data.reduce((acc, item) => {
     if (!acc[item.time]) {
       acc[item.time] = [];
@@ -92,30 +100,35 @@ const DataCar = (props) => {
 
               {/* 当天的每一条记录 */}
               {items.map((item, index) => (
-                // console.log(item),
+                // console.log("当月每条数据", item),
                 <Box
                   key={index}
                   sx={{
                     height: 50,
                     display: 'flex',
-                    justifyContent: 'space-between',
+                    // justifyContent: 'space-between',
                     alignItems: 'center',
                   }}
                 >
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    {dataTypeIcon[item.iconType]}
-                    <Typography sx={{ ml: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      {dataTypeIcon[item.iconType]}
+                      <Typography sx={{ ml: 2 }}>
+                        {
+                          item.remark ? item.remark : item.iconType
+                        }
+                      </Typography>
+                    </Box>
+
+                    <Typography>
                       {
-                        item.remark ? item.remark : item.iconType
+                        item.expenditure ? "-" + item.expenditure : item.income
                       }
                     </Typography>
-                  </Box>
 
-                  <Typography>
-                    {
-                      item.expenditure ? "-" + item.expenditure : item.income
-                    }
-                  </Typography>
+                    <Button sx={{ position: 'relative', right: 0 }} onClick={() => handleDelete(item.id)}>删除</Button>
+                  </Box>
                 </Box>
               ))}
             </Box>

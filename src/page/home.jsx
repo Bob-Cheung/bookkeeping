@@ -145,7 +145,7 @@ const Home = (props) => {
       </Paper >
       {/* 数据组件 */}
       <Box sx={{ flex: 1, overflowY: "auto", marginTop: "10px", marginBottom: '10px', borderRadius: "10px" }}>
-        <DataCar data={data} />
+        <DataCar data={data} handleUpdateData={props.handleUpdateData} />
       </Box>
       {/* 时间选择组件 */}
       <SelectTime
