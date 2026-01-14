@@ -277,11 +277,26 @@ async function updateDataByMonth(month, id, patch) {
 		const newData = jsonData.map(item => {
 			if (item.id === id) {
 				updated = true;
-				return {
-					...item,
-					...patch,
-					id: item.id // 确保 id 不被覆盖
-				};
+				const newItem = { ...item, id: item.id }; // 保留 id
+
+				// 处理 remark
+				if ('remark' in patch) {
+					newItem.remark = patch.remark;
+				}
+
+				// 处理 expenditure
+				if ('expenditure' in patch) {
+					delete newItem.income;
+					newItem.expenditure = patch.expenditure;
+				}
+
+				// 处理 income
+				if ('income' in patch) {
+					delete newItem.expenditure;
+					newItem.income = patch.income;
+				}
+
+				return newItem;
 			}
 			return item;
 		});
