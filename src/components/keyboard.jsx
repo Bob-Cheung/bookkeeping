@@ -119,7 +119,7 @@ const Keyboard = (props) => {
 	};
 
 	// 处理完成按钮点击
-	const handleCompleteClick = () => {
+	const handleCompleteClick = async () => {
 		let finalAmount = amount;
 
 		// 如果当前是表达式（如 "6 +" 或 "6 -"），只取第一个操作数
@@ -175,7 +175,7 @@ const Keyboard = (props) => {
 			};
 		};
 		// 保存修改数据
-		addData(newData);
+		await addData(newData);
 		props.handleUpdateData();
 		// 重置计算器
 		resetCalculator();

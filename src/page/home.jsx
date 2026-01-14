@@ -47,17 +47,26 @@ const Home = (props) => {
     localStorage.setItem("budget", JSON.stringify(value));
   };
 
+  const getData = async () => {
+    const currentMonthData = await filterDataByDate(currentYearMonth, props.allData);
+    if (currentMonthData) {
+      console.log("所有数据", props.allData);
+      setData(currentMonthData);
+      calculateTotal(currentMonthData);
+    } else {
+      setData([]);
+      calculateTotal([]);
+      console.log("没有数据");
+    };
+  };
+
   useEffect(() => {
     // const currentDate = new Date();
     // const currentYear = currentDate.getFullYear();
     // const currentMonth = currentDate.getMonth() + 1;
     // setCurrentYearMonth({ year: currentYear, month: currentMonth });
     // 根据今天的年月，筛选出当月的数据
-    const currentMonthData = filterDataByDate(currentYearMonth, props.allData);
-    console.log("所有数据", props.allData);
-    console.log("当月数据", currentMonthData);
-    setData(currentMonthData);
-    calculateTotal(currentMonthData);
+    getData();
   }, [props.allData]);
 
   // 计算当月总支出，总收入，结余
@@ -87,14 +96,19 @@ const Home = (props) => {
   };
 
   // 根据年月筛选数据
-  const handleSelectTime = (year, month) => {
+  const handleSelectTime = async (year, month) => {
     console.log(year, month, props.allData);
     sessionStorage.setItem("currentYearMonth", JSON.stringify({ year: year, month: month }));
-    const currentMonthData = filterDataByDate({ year: year, month: month }, props.allData);
-    console.log(currentMonthData);
-    setData(currentMonthData);
+    const currentMonthData = await filterDataByDate({ year: year, month: month }, props.allData);
+    if (currentMonthData) {
+      console.log("handleSelectTime", currentMonthData);
+      setData(currentMonthData);
+      calculateTotal(currentMonthData);
+    } else {
+      setData([]);
+      calculateTotal([]);
+    };
     setCurrentYearMonth({ year, month });
-    calculateTotal(currentMonthData);
   };
 
   const handleOpenSelectTime = (newOpen) => {

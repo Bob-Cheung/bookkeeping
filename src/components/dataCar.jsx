@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { deleteData, modifyData } from '../utils.js';
 import {
   Box,
@@ -35,16 +35,17 @@ const DataCar = (props) => {
     setRemarkValue(value);
   };
   // 失焦
-  const handleRemarkBlur = (itemId) => {
+  const handleRemarkBlur = (itemId, time) => {
     setActiveRemarkInputId(null);
-    modifyData(itemId, 'remark', remarkValue);
+    const newData = { 'remark': remarkValue };
+    modifyData(time, itemId, newData);
     props.handleUpdateData();
   };
 
   const handleExpenditureFocus = (itemId, value) => {
     setExpenditureValue(value);
   };
-  const handleExpenditureBlur = (itemId) => {
+  const handleExpenditureBlur = (itemId, time) => {
     setActiveexpenditureInputId(null);
     let type;
     if (Number(expenditureValue) > 0) {
@@ -52,12 +53,13 @@ const DataCar = (props) => {
     } else {
       type = 'expenditure';
     }
-    modifyData(itemId, type, Math.abs(Number(expenditureValue)));
+    const newData = { [type]: Math.abs(Number(expenditureValue)) };
+    modifyData(time, itemId, newData);
     props.handleUpdateData();
   };
 
-  const handleDelete = (id) => {
-    deleteData(id);
+  const handleDelete = (id, time) => {
+    deleteData(id, time);
     props.handleUpdateData();
   };
 
@@ -169,7 +171,7 @@ const DataCar = (props) => {
                             value={remarkValue}
                             autoFocus
                             onFocus={() => handleRemarkFocus(item.id, displayText)}
-                            onBlur={() => handleRemarkBlur(item.id)}
+                            onBlur={() => handleRemarkBlur(item.id, item.time)}
                             onChange={(e) => setRemarkValue(e.target.value)}
                           />
                         }
@@ -191,12 +193,12 @@ const DataCar = (props) => {
                             value={expenditureValue}
                             onChange={(e) => setExpenditureValue(e.target.value)}
                             onFocus={() => handleExpenditureFocus(item.id, item.expenditure ? "-" + item.expenditure : item.income)}
-                            onBlur={() => handleExpenditureBlur(item.id)}
+                            onBlur={() => handleExpenditureBlur(item.id, item.time)}
                           />
                         }
                       </Box>
 
-                      <Button sx={{ position: 'relative', right: 0 }} onClick={() => handleDelete(item.id)}>删除</Button>
+                      <Button sx={{ position: 'relative', right: 0 }} onClick={() => handleDelete(item.id, item.time)}>删除</Button>
                     </Box>
                   </Box>
                 );
