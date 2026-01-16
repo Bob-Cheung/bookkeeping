@@ -6,7 +6,9 @@ import {
 	Button,
 	IconButton,
 	Grid,
-	TextField
+	TextField,
+	Tabs,
+	Tab,
 } from '@mui/material';
 
 import Keyboard from '../components/keyboard';
@@ -28,7 +30,7 @@ const SelectTime = (props) => {
 		setSelectedIndex(-1);
 	}, [props.openAddDataPage]);
 
-	const handleIncomeExpense = (value) => {
+	const handleIncomeExpense = (e, value) => {
 		setTransactionType(value);
 	};
 
@@ -45,6 +47,13 @@ const SelectTime = (props) => {
 		setSelectedIndex(index);
 		setIconValue(value);
 	};
+
+	function a11yProps(index) {
+		return {
+			id: `simple-tab-${index}`,
+			'aria-controls': `simple-tabpanel-${index}`,
+		};
+	}
 
 
 	const iconList = [
@@ -75,11 +84,23 @@ const SelectTime = (props) => {
 		<Drawer open={props.openAddDataPage} anchor={"bottom"} onClose={() => props.handleOpenAddDataPage(false)}>
 			<Box sx={{ width: "100%", height: "100vh" }} role="presentation" >
 				<Box sx={{ width: "100%", height: "10vh", backgroundColor: "#6babaa", display: "flex", justifyContent: "center", alignItems: "end", }}>
-					<Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+					{/* <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
 						<Button variant="h6" onClick={() => handleIncomeExpense(0)}>支出</Button>
 						<Button variant="h6" onClick={() => handleIncomeExpense(1)} >收入</Button>
 						<Button variant="h6" sx={{ position: "absolute", right: "1vw" }} onClick={() => handleOpenAddDataPage(false)}>取消</Button>
-					</Box>
+					</Box> */}
+					<Tabs
+						value={transactionType}
+						onChange={handleIncomeExpense}
+						indicatorColor="primary"
+						textColor="primary"
+						variant="fullWidth"
+						aria-label="action tabs example"
+					>
+						<Tab label="支出" {...a11yProps(0)} />
+						<Tab label="收入" {...a11yProps(1)} />
+					</Tabs>
+					<Tab label="取消" sx={{ position: "absolute", right: "-10PX" }} onClick={() => handleOpenAddDataPage(false)} />
 				</Box>
 				{/* icon 列表 */}
 				<Box sx={{
@@ -106,7 +127,7 @@ const SelectTime = (props) => {
 									flexDirection: "column",
 									alignItems: "center",
 									borderRadius: "50%",
-									backgroundColor: selectedIndex === index ? "yellow" : "#ccc", // 判断是否选中
+									backgroundColor: selectedIndex === index ? "#ffd700" : "#ccc", // 判断是否选中
 									display: "flex",
 									justifyContent: "center",
 									alignItems: "center",

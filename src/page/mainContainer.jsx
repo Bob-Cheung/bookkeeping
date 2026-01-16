@@ -36,10 +36,12 @@ const MainContainer = () => {
       month: (new Date().getMonth() + 1).toString().padStart(2, "0")
     };
     sessionStorage.setItem("currentYearMonth", JSON.stringify(currentYearMonth));
-    // 获取权限
-    await requestStoragePermission();
-    // 创建主文件夹
-    await ensureMainFolder(mainDirName);
+    if (window.cordova) {
+      // 获取权限
+      await requestStoragePermission();
+      // 创建主文件夹
+      await ensureMainFolder(mainDirName);
+    };
   };
 
   useEffect(() => {
