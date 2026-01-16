@@ -425,32 +425,99 @@ function sortByTimeDesc(list) {
 // };
 const getPhoneData = async () => {
 	let time = JSON.parse(sessionStorage.getItem("currentYearMonth"));
-	time = `${time.year}-${time.month}`;
-	const data = await readDataByMonth(time);
+	let data;
+	if (window.cordova) {
+		time = `${time.year}-${time.month}`;
+		data = await readDataByMonth(time);
+	} else {
+		const storedData = JSON.parse(localStorage.getItem("allData"));
+		if (storedData) {
+			data = storedData;
+		} else {
+			localStorage.setItem("allData", JSON.stringify([]));
+		};
+	};
 	console.log("getPhoneData", data);
 	return data;
 };
 
 // 添加数据
 const addData = async (data) => {
+	console.log("addData", data);
 	const time = data.time.slice(0, 7);
-	await appendDataByMonth(time, data);
+	if (window.cordova) {
+		await appendDataByMonth(time, data);
+	} else {
+		let storedData = JSON.parse(localStorage.getItem("allData"));
+		if (storedData) {
+			storedData.unshift(data);
+		} else {
+			storedData = [data];
+		};
+		localStorage.setItem("allData", JSON.stringify(storedData));
+	};
 };
 
 // 删除数据
 const deleteData = async (id, time) => {
-	await deleteDataByMonth(time.slice(0, 7), id);
+	if (window.cordova) {
+		await deleteDataByMonth(time.slice(0, 7), id);
+	} else {
+		let storedData = JSON.parse(localStorage.getItem("allData"));
+		if (storedData) {
+			storedData = storedData.filter(item => item.id !== id);
+			localStorage.setItem("allData", JSON.stringify(storedData));
+		} else {
+			console.log("删除失败");
+		};
+	};
 };
 
 // 修改数据
 const modifyData = async (time, id, newData) => {
-	await updateDataByMonth(time.slice(0, 7), id, newData);
+	if (window.cordova) {
+		await updateDataByMonth(time.slice(0, 7), id, newData);
+	} else {
+		let storedData = JSON.parse(localStorage.getItem("allData"));
+		if (storedData) {
+			storedData = storedData.map(item => {
+				if (item.id === id) {
+					if (newData.expenditure) {
+						delete item.income;
+						item.expenditure = newData.expenditure;
+					} else if (newData.income) {
+						delete item.expenditure;
+						item.income = newData.income;
+					} else if (newData.remark) {
+						item.remark = newData.remark;
+					}
+				}
+				return item;
+			});
+			localStorage.setItem("allData", JSON.stringify(storedData));
+		};
+	};
 };
 
 // 根据日期筛选数据
 const filterDataByDate = async (time, date) => {
 	const newTime = `${time.year}-${time.month}`;
-	const data = await readDataByMonth(newTime);
+	let data;
+	if (window.cordova) {
+		data = await readDataByMonth(newTime);
+	} else {
+		let storedData = JSON.parse(localStorage.getItem("allData"));
+		if (storedData) {
+			data = storedData.filter(item => {
+				const itemDate = new Date(item.time);
+				const itemYear = itemDate.getFullYear();
+				const itemMonth = itemDate.getMonth() + 1;
+				return itemYear === time.year && itemMonth === Number(time.month);
+			});
+		} else {
+			data = [];
+		};
+	};
 	console.log("filterDataByDate", data);
 	return data;
 };
