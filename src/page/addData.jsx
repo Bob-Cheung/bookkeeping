@@ -3,10 +3,6 @@ import {
 	Box,
 	Drawer,
 	Typography,
-	Button,
-	IconButton,
-	Grid,
-	TextField,
 	Tabs,
 	Tab,
 } from '@mui/material';
@@ -105,9 +101,7 @@ const SelectTime = (props) => {
 									alignItems: "center",
 									borderRadius: "50%",
 									backgroundColor: selectedIndex === index ? "#ffd700" : "#e9e9e9", // 判断是否选中
-									display: "flex",
 									justifyContent: "center",
-									alignItems: "center",
 								}}
 							>
 								{/* 图标和文字内容 */}
