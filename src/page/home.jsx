@@ -90,15 +90,20 @@ const Home = (props) => {
 
     if (balance < 0) {
       setSnackbarType("warning");
-      setSnackbarContent("本月已超支，请控制消费！");
-      handleOpenSnackbar(true);
+      const overspendPopup = JSON.parse(localStorage.getItem("overspendPopup"));
+      if (!overspendPopup) {
+        handleOpenSnackbar(false);
+      } else {
+        handleOpenSnackbar(true);
+        setSnackbarContent("本月已超支，请控制消费！");
+      };
     };
   };
 
   // 根据年月筛选数据
   const handleSelectTime = async (year, month) => {
     console.log(year, month, props.allData);
-    sessionStorage.setItem("currentYearMonth", JSON.stringify({ year: year, month: month }));
+    sessionStorage.setItem("currentYearMonth", JSON.stringify({ year: year, month: Number(month) }));
     const currentMonthData = await filterDataByDate({ year: year, month: month }, props.allData);
     if (currentMonthData) {
       console.log("handleSelectTime", currentMonthData);
@@ -127,11 +132,11 @@ const Home = (props) => {
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 2, }}>
-        <Typography variant="h5" sx={{ color: '#f1fefe' }}>我爱记账</Typography>
+        <Typography variant="h5" sx={{ color: 'black', fontWeight: "bold" }}>我爱记账</Typography>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: "10px 0" }}>
         <Box sx={{ display: 'flex', alignItems: 'center', }} onClick={() => handleOpenSelectTime(true)}>
-          <Typography alignCenter sx={{ color: '#f1fefe' }}>{`${currentYearMonth.year}年${currentYearMonth.month}月`}</Typography>
+          <Typography alignCenter sx={{ color: 'black' }}>{`${currentYearMonth.year}年${currentYearMonth.month}月`}</Typography>
           <IconButton sx={{ padding: 0 }} >
             <ChevronRightIcon />
           </IconButton>

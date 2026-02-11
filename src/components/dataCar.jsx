@@ -7,12 +7,7 @@ import {
   Button,
   TextField,
 } from '@mui/material';
-
-import RestaurantIcon from '@mui/icons-material/Restaurant';
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
-import LocalAtmIcon from '@mui/icons-material/LocalAtm';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import { iconList, incomeIconList } from '../page/icon.js';
 
 const DataCar = (props) => {
   const [activeRemarkInputId, setActiveRemarkInputId] = useState(null);
@@ -79,12 +74,11 @@ const DataCar = (props) => {
   const formatDate = (dateStr) => dateStr.slice(5); // 01-01
 
 
-  const dataTypeIcon = {
-    "餐饮": <RestaurantIcon />,
-    "汽车": <DirectionsCarIcon />,
-    "交通": <DirectionsBusIcon />,
-    "理财": <LocalAtmIcon />,
-    "工资": <AttachMoneyIcon />,
+  const getIconByType = (iconType) => {
+    const newIconList = [...iconList, ...incomeIconList];
+    const matchItem = newIconList.find(item => item.name === iconType);
+    const icon = { icon: matchItem?.icon, color: matchItem?.color };
+    return icon || <span style={{ color: 'white', fontSize: 16 }}>●</span>;
   };
   return (
     <>
@@ -115,10 +109,10 @@ const DataCar = (props) => {
               {/* 头部：日期 + 汇总 */}
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Box sx={{ display: 'flex' }}>
-                  <Typography sx={{ fontSize: 14 }}>
+                  <Typography sx={{ fontSize: 14, color: '#8c8c8c' }}>
                     {formatDate(date)}
                   </Typography>
-                  <Typography sx={{ fontSize: 14, pl: 1 }}>
+                  <Typography sx={{ fontSize: 14, pl: 1, color: '#8c8c8c' }}>
                     {getWeekday(date)}
                   </Typography>
                 </Box>
@@ -126,13 +120,13 @@ const DataCar = (props) => {
                 <Box sx={{ display: 'flex' }}>
                   {
                     expenditure &&
-                    <Typography sx={{ fontSize: 14, color: '#c1c1d0' }}>
+                    <Typography sx={{ fontSize: 14, color: '#8c8c8c' }}>
                       支出 {totalExpenditure}
                     </Typography>
                   }
                   {
                     incomeState &&
-                    <Typography sx={{ fontSize: 14, color: '#c1c1d0', paddingLeft: '10px' }}>
+                    <Typography sx={{ fontSize: 14, color: '#8c8c8c', paddingLeft: '10px' }}>
                       收入 {totalIncome}
                     </Typography>
                   }
@@ -158,7 +152,9 @@ const DataCar = (props) => {
                     <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
 
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        {dataTypeIcon[item.iconType]}
+                        <Box sx={{ background: "#FF6347", display: 'flex', alignItems: 'center', justifyContent: 'center', width: 30, height: 30, borderRadius: '50%', mr: 1 }}>
+                          {getIconByType(item.iconType).icon}
+                        </Box>
                         {activeRemarkInputId !== item.id &&
                           <Typography sx={{ ml: 2 }} onClick={() => handleTextClick(item.id)}>{displayText}</Typography>
                         }

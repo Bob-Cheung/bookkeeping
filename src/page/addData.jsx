@@ -12,10 +12,7 @@ import {
 } from '@mui/material';
 
 import Keyboard from '../components/keyboard';
-
-import RestaurantIcon from '@mui/icons-material/Restaurant';
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
+import { iconList, incomeIconList } from './icon';
 
 const SelectTime = (props) => {
 	const [openKeyboard, setOpenKeyboard] = useState(false);
@@ -56,30 +53,6 @@ const SelectTime = (props) => {
 	}
 
 
-	const iconList = [
-		{ icon: <RestaurantIcon sx={{ fontSize: 30 }} />, name: "餐饮" },
-		{ icon: <DirectionsCarIcon sx={{ fontSize: 30 }} />, name: "交通" },
-		{ icon: <DirectionsBusIcon sx={{ fontSize: 30 }} />, name: "汽车" },
-		{ icon: <RestaurantIcon sx={{ fontSize: 30 }} />, name: "餐饮" },
-		{ icon: <DirectionsCarIcon sx={{ fontSize: 30 }} />, name: "交通" },
-		{ icon: <DirectionsBusIcon sx={{ fontSize: 30 }} />, name: "汽车" },
-		{ icon: <RestaurantIcon sx={{ fontSize: 30 }} />, name: "餐饮" },
-		{ icon: <DirectionsCarIcon sx={{ fontSize: 30 }} />, name: "交通" },
-		{ icon: <DirectionsBusIcon sx={{ fontSize: 30 }} />, name: "汽车" },
-		{ icon: <RestaurantIcon sx={{ fontSize: 30 }} />, name: "餐饮" },
-		{ icon: <DirectionsCarIcon sx={{ fontSize: 30 }} />, name: "交通" },
-		{ icon: <DirectionsBusIcon sx={{ fontSize: 30 }} />, name: "汽车" },
-		{ icon: <RestaurantIcon sx={{ fontSize: 30 }} />, name: "餐饮" },
-		{ icon: <DirectionsCarIcon sx={{ fontSize: 30 }} />, name: "交通" },
-		{ icon: <DirectionsBusIcon sx={{ fontSize: 30 }} />, name: "汽车" },
-		{ icon: <RestaurantIcon sx={{ fontSize: 30 }} />, name: "餐饮" },
-		{ icon: <DirectionsCarIcon sx={{ fontSize: 30 }} />, name: "交通" },
-		{ icon: <DirectionsBusIcon sx={{ fontSize: 30 }} />, name: "汽车" },
-		{ icon: <RestaurantIcon sx={{ fontSize: 30 }} />, name: "餐饮" },
-		{ icon: <DirectionsCarIcon sx={{ fontSize: 30 }} />, name: "交通" },
-		{ icon: <DirectionsBusIcon sx={{ fontSize: 30 }} />, name: "汽车" },
-	]
-
 	return (
 		<Drawer open={props.openAddDataPage} anchor={"bottom"} onClose={() => props.handleOpenAddDataPage(false)}>
 			<Box sx={{ width: "100%", height: "100vh" }} role="presentation" >
@@ -116,8 +89,12 @@ const SelectTime = (props) => {
 					boxSizing: "border-box",
 					backgroundColor: "#ffffff",
 				}}>
-					{iconList.map((item, index) => (
-						<Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }} onClick={handleOpenkeyboard.bind(this, index, true, item.name)} key={index} >
+					{(transactionType === 0 ? iconList : incomeIconList).map((item, index) => (
+						<Box
+							sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", maxHeight: "74px" }}
+							onClick={handleOpenkeyboard.bind(this, index, true, item.name)}
+							key={index}
+						>
 							<Box
 								key={index}
 								sx={{
@@ -127,7 +104,7 @@ const SelectTime = (props) => {
 									flexDirection: "column",
 									alignItems: "center",
 									borderRadius: "50%",
-									backgroundColor: selectedIndex === index ? "#ffd700" : "#ccc", // 判断是否选中
+									backgroundColor: selectedIndex === index ? "#ffd700" : "#e9e9e9", // 判断是否选中
 									display: "flex",
 									justifyContent: "center",
 									alignItems: "center",

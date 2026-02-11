@@ -33,7 +33,8 @@ const MainContainer = () => {
   const init = async () => {
     const currentYearMonth = {
       year: new Date().getFullYear(),
-      month: (new Date().getMonth() + 1).toString().padStart(2, "0")
+      month: Number((new Date().getMonth() + 1).toString().padStart(2, "0")),
+      day: Number((new Date().getDate()).toString().padStart(2, "0")),
     };
     sessionStorage.setItem("currentYearMonth", JSON.stringify(currentYearMonth));
     if (window.cordova) {
@@ -48,6 +49,18 @@ const MainContainer = () => {
     init();
     handleUpdateData();
   }, []);
+
+
+  useEffect(() => {
+    const quickMode = JSON.parse(localStorage.getItem("quickMode"));
+    console.log("quickMode", quickMode);
+    if (quickMode) {
+      setOpenAddDataPage(quickMode);
+    } else {
+      localStorage.setItem("quickMode", JSON.stringify(false));
+    };
+  }, []);
+
   return (
     <Box sx={{
       height: `calc(100vh - ${BOTTOM_NAV_HEIGHT}px)`,
@@ -57,7 +70,7 @@ const MainContainer = () => {
       padding: '0 20px',
     }}>
       {pageValue === 0 && <HomePage allData={allData} handleUpdateData={handleUpdateData} />}
-      {pageValue === 1 && <ChartPage />}
+      {pageValue === 1 && <ChartPage allData={allData} />}
       {pageValue === 3 && <AssetsPage />}
       {pageValue === 4 && <MyPage />}
 

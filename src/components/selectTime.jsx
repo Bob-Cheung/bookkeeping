@@ -45,7 +45,10 @@ const SelectTime = (props) => {
     if (props.openSelectTime) {
       // 更新状态，同步当前日期
       setYear(props.currentYearMonth.year);
-      setMonth(props.currentYearMonth.month);
+      const month = Number(props.currentYearMonth.month);
+      if (month < 10) {
+        setMonth("0" + month);
+      }
     }
   }, [props.openSelectTime, startYear, endYear]);
 

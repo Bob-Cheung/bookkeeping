@@ -41,6 +41,7 @@ async function ensureMainFolder(mainFolder) {
 		let rootDir;
 		if (window.cordova.platformId === 'android') {
 			rootDir = window.cordova.file.externalRootDirectory + 'Download/';
+			// rootDir = window.cordova.file.externalFilesDirectory;
 		} else if (window.cordova.platformId === 'ios') {
 			rootDir = window.cordova.file.documentsDirectory;
 		} else {
@@ -127,14 +128,24 @@ function writeJsonToFile(fileEntry, data) {
 	});
 };
 
+// 读取data.json文件
 function readJsonFromFile(fileEntry) {
 	return new Promise((resolve, reject) => {
 		fileEntry.file(file => {
+			console.log("文件名称：", file.name);
+			console.log("文件大小（字节）：", file.size); // 重点看这里，空文件会显示 0
+			console.log("文件类型：", file.type);
 			const reader = new FileReader();
+			reader.onabort = () => {
+				console.error("文件读取被中止！");
+				reject(new Error("文件读取过程被中止"));
+			};
 			reader.onloadend = () => {
 				try {
+					console.log("文件原始内容：", reader.result);
 					resolve(reader.result ? JSON.parse(reader.result) : null);
 				} catch (e) {
+					console.error("JSON解析错误：", e);
 					reject(e);
 				}
 			};
@@ -356,6 +367,7 @@ async function readDataByMonth(month) {
 			return null;
 		}
 
+		console.log('data.json 文件路径:', fileEntry.nativeURL, fileEntry);
 		// 4. 读取 JSON
 		const data = await readJsonFromFile(fileEntry);
 		console.log('读取成功:', data);
@@ -427,6 +439,10 @@ const getPhoneData = async () => {
 	let time = JSON.parse(sessionStorage.getItem("currentYearMonth"));
 	let data;
 	if (window.cordova) {
+		const month = Number(time.month);
+		if (month < 10) {
+			time.month = `0${month}`;
+		}
 		time = `${time.year}-${time.month}`;
 		data = await readDataByMonth(time);
 	} else {
@@ -501,6 +517,10 @@ const modifyData = async (time, id, newData) => {
 
 // 根据日期筛选数据
 const filterDataByDate = async (time, date) => {
+	const month = Number(time.month);
+	if (month < 10) {
+		time.month = `0${month}`;
+	}
 	const newTime = `${time.year}-${time.month}`;
 	let data;
 	if (window.cordova) {
@@ -557,6 +577,134 @@ function getDaysInMonth(year, month) {
 	return new Date(year, month, 0).getDate();
 };
 
+
+
+/**
+ * 组装收支图表数据（通用函数）
+ * @param {Array} dataSource - 原始收支数据数组（必填）
+ * @param {string} type - 数据类型："支出" 或 "收入"（必填）
+ * @param {Object} [options] - 可选配置项
+ * @param {boolean} [options.validateNumber=true] - 是否校验数值为有效数字（默认true）
+ * @param {boolean} [options.positiveValue=true] - 是否只保留正值（默认true）
+ * @returns {Array} 组装后的图表数据数组
+ */
+const assembleChartData = (dataSource, type, options = {}) => {
+	// 默认配置
+	const {
+		validateNumber = true,
+		positiveValue = true
+	} = options;
+
+	// 边界校验：必填参数缺失时抛出友好错误
+	if (!Array.isArray(dataSource)) {
+		console.error('assembleChartData: dataSource 必须是数组类型');
+		return [];
+	}
+	if (!['支出', '收入'].includes(type)) {
+		console.error('assembleChartData: type 必须是 "支出" 或 "收入"');
+		return [];
+	}
+
+	// 2. 确定目标字段（支出→expenditure，收入→income）
+	const targetField = type === "支出" ? "expenditure" : "income";
+
+	// 3. 筛选并组装数据
+	let chartData = dataSource
+		.filter(item => {
+			// 基础判断：目标字段存在
+			if (!item.hasOwnProperty(targetField)) return false;
+
+			const value = item[targetField];
+			// 数值合法性校验（可通过配置关闭）
+			if (validateNumber) {
+				if (isNaN(Number(value))) return false;
+			}
+			// 只保留正值（可通过配置关闭）
+			if (positiveValue) {
+				if (Number(value) <= 0) return false;
+			}
+			return true;
+		})
+		.map(item => ({
+			time: item.time || '', // 兜底空字符串，避免undefined
+			id: item.id || '',     // 兜底空字符串
+			name: item.iconType || '',
+			remark: item.remark || '',
+			color: generateRandomColor(),
+			value: validateNumber ? Number(item[targetField]) : item[targetField]
+		}));
+
+	chartData = mergeDataByGroupName(chartData);
+
+	return chartData;
+
+};
+
+const mergeDataByGroupName = (originalData) => {
+	// 1. 先分组求和：key 是 name，value 是累加的 value
+	const groupMap = {};
+	originalData.forEach(item => {
+		if (!groupMap[item.name]) {
+			groupMap[item.name] = 0;
+		}
+		groupMap[item.name] += item.value;
+	});
+
+	// 2. 转换为最终数组格式
+	const result = [];
+	for (const name in groupMap) {
+		result.push({
+			time: new Date(),    // 当前时间
+			name: name,
+			color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+			value: groupMap[name]
+		});
+	}
+
+	// 每项占计算总金额的比例
+	const total = result.reduce((sum, item) => sum + item.value, 0);
+	result.forEach(item => {
+		// 取整数，避免浮点数精度问题
+		// item.percents = Math.round((item.value / total) * 100);
+		const percent = (item.value / total) * 100;
+		item.percents = Number(percent.toFixed(1));
+	});
+
+	return result;
+}
+
+// 生成随机颜色
+const generateRandomColor = () => {
+	// 固定 #0088FE 的饱和度(100%)和亮度(94%)，仅随机色相
+	const FIXED_S = 100; // 饱和度 100%
+	const FIXED_B = 94;  // 亮度 94%
+
+	// 随机生成色相（0~360°）
+	const h = Math.floor(Math.random() * 360);
+	// HSB 转 RGB 并生成十六进制颜色（核心转换逻辑）
+	const s = FIXED_S / 100;
+	const b = FIXED_B / 100;
+	let r, g, v;
+	const i = Math.floor(h / 60);
+	const f = h / 60 - i;
+	const p = b * (1 - s);
+	const q = b * (1 - s * f);
+	const t = b * (1 - s * (1 - f));
+
+	switch (i % 6) {
+		case 0: r = b; g = t; v = p; break;
+		case 1: r = q; g = b; v = p; break;
+		case 2: r = p; g = b; v = t; break;
+		case 3: r = p; g = q; v = b; break;
+		case 4: r = t; g = p; v = b; break;
+		case 5: r = b; g = p; v = q; break;
+	}
+
+	// 转成6位十六进制并补零（和你原逻辑一致）
+	const toHex = x => Math.round(x * 255).toString(16).padStart(2, '0');
+	return `#${toHex(r)}${toHex(g)}${toHex(v)}`;
+};
+
 export {
 	ensureMainFolder,
 	appendDataByMonth,
@@ -568,4 +716,5 @@ export {
 	deleteData,
 	modifyData,
 	updateDays,
+	assembleChartData
 };
