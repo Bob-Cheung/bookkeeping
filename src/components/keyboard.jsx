@@ -27,7 +27,6 @@ const Keyboard = (props) => {
 	// 选择的时间，默认今天日期，格式为2025-10-01
 	const [selectedTime, setSelectedTime] = useState(new Date().toISOString().split('T')[0]);
 
-
 	// 处理数字按钮点击
 	const handleNumberClick = (digit) => {
 		if (waitingForOperand) {
@@ -271,13 +270,13 @@ const Keyboard = (props) => {
 			return {
 				text: '=',
 				onClick: handleEqualsClick,
-				bgColor: '#FFD700'
+				bgColor: props.transactionType === 0 ? '#FF6347' : '#66BB6A'
 			};
 		} else {
 			return {
 				text: '完成',
 				onClick: handleCompleteClick,
-				bgColor: '#FFD700'
+				bgColor: props.transactionType === 0 ? '#FF6347' : '#66BB6A'
 			};
 		}
 	};
@@ -316,7 +315,7 @@ const Keyboard = (props) => {
 						fontSize: '2rem',
 						marginBottom: 1,
 						minHeight: '2.5rem',
-						color: '#333333',
+						color: props.transactionType === 0 ? '#FF6347' : '#66BB6A',
 						fontWeight: 'bold',
 						overflow: 'hidden',
 						textOverflow: 'ellipsis',
@@ -472,7 +471,7 @@ const Keyboard = (props) => {
 						borderRadius: 1,
 						fontWeight: 'bold',
 						'&:hover': {
-							backgroundColor: '#FFC107',
+							backgroundColor: props.transactionType === 0 ? '#FF6347' : '#66BB6A',
 						}
 					}}
 					onClick={bottomRightButton.onClick}

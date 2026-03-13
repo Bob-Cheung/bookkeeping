@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { deleteData, modifyData } from '../utils.js';
+import { deleteData, modifyData, getIconByType } from '../utils.js';
 import {
   Box,
   Typography,
@@ -73,13 +73,6 @@ const DataCar = (props) => {
 
   const formatDate = (dateStr) => dateStr.slice(5); // 01-01
 
-
-  const getIconByType = (iconType) => {
-    const newIconList = [...iconList, ...incomeIconList];
-    const matchItem = newIconList.find(item => item.name === iconType);
-    const icon = { icon: matchItem?.icon, color: matchItem?.color };
-    return icon || <span style={{ color: 'white', fontSize: 16 }}>●</span>;
-  };
   return (
     <>
       {Object.entries(groupedData).map(([date, items]) => {
@@ -102,7 +95,8 @@ const DataCar = (props) => {
         return (
           <Paper
             key={date}
-            sx={{ width: '100%', borderRadius: '10px', margin: '10px 0' }}
+            elevation={3}
+            sx={{ width: '100%', borderRadius: '20px', margin: '10px 0' }}
           >
             <Box sx={{ padding: '10px', display: 'flex', flexDirection: 'column' }}>
 
@@ -152,7 +146,7 @@ const DataCar = (props) => {
                     <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
 
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Box sx={{ background: "#FF6347", display: 'flex', alignItems: 'center', justifyContent: 'center', width: 30, height: 30, borderRadius: '50%', mr: 1 }}>
+                        <Box sx={{ background: item.income ? "#66BB6A" : "#FF6347", display: 'flex', alignItems: 'center', justifyContent: 'center', width: 30, height: 30, borderRadius: '50%', mr: 1 }}>
                           {getIconByType(item.iconType).icon}
                         </Box>
                         {activeRemarkInputId !== item.id &&

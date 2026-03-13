@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import LinesCharts from '../components/linesCharts';
 import PieCharts from '../components/pieCharts';
 import LinearProgressWithLabel from '../components/linearProgressWithLabel';
-import { assembleChartData, filterDataByDate } from '../utils.js';
-import { iconList, incomeIconList } from './icon';
+import { assembleChartData, filterDataByDate, getIconByType } from '../utils.js';
 import {
   Box,
   Typography,
@@ -163,12 +162,6 @@ const ChartPage = (props) => {
     setChartData(chartData);
   };
 
-  const getIconByType = (iconType) => {
-    const newIconList = [...iconList, ...incomeIconList];
-    const matchItem = newIconList.find(item => item.name === iconType);
-    const icon = { icon: matchItem?.icon, color: matchItem?.color };
-    return icon || <span style={{ color: 'white', fontSize: 16 }}>●</span>;
-  };
 
 
 
@@ -229,13 +222,13 @@ const ChartPage = (props) => {
       {/* <Box sx={{ width: "100%", height: "20vh" }}>
         <LinesCharts data={data} />
       </Box> */}
-      <Box sx={{ backgroundColor: "white", borderRadius: "10px", marginTop: "10px", overflowY: "auto", maxHeight: "calc(100vh - 180px)" }}>
+      <Box sx={{ backgroundColor: "white", borderRadius: "10px", marginTop: "10px", overflowY: "auto", maxHeight: "calc(100vh - 180px)", boxShadow: '0 2px 4px rgba(0,0,0,0.06)' }}>
         {/* 图表 */}
         <Box sx={{ display: "flex", alignItems: "center", padding: "10px" }}>
           <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#fedb43", borderRadius: "50%", width: "25px", height: "25px" }}>
             <PieChartIcon sx={{ fontSize: "20px", color: "white" }} />
           </Box>
-          <Typography sx={{ marginLeft: "10px" }}>支出分类详情</Typography>
+          <Typography sx={{ marginLeft: "10px" }}>{selectedExpenditure === "支出" ? "支出分类详情" : "收入分类详情"}</Typography>
         </Box>
         <Box sx={{ width: "100%", height: "350px", display: "flex", justifyContent: "center", alignItems: "center" }}>
           {
@@ -246,7 +239,7 @@ const ChartPage = (props) => {
           }
         </Box>
         {/* 支出/收入按钮 */}
-        <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+        <Box sx={{ width: "100%", display: "flex", justifyContent: "center", marginTop: "20px" }}>
           <Box sx={{
             width: "100px",
             height: "40px",
@@ -319,7 +312,7 @@ const ChartPage = (props) => {
 
                 <LinearProgressWithLabel
                   progress={item.percents}
-                  color={item.color}
+                  color={getIconByType(item.name).color}
                 />
               </Box>
             </Box>

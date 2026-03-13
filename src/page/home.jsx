@@ -131,65 +131,92 @@ const Home = (props) => {
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 2, }}>
-        <Typography variant="h5" sx={{ color: 'black', fontWeight: "bold" }}>我爱记账</Typography>
+      {/* 顶部标题 */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 2, paddingBottom: 1 }}>
+        <Typography variant="h5" sx={{ color: '#333', fontWeight: 800, letterSpacing: '1px' }}>我爱记账</Typography>
       </Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: "10px 0" }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', }} onClick={() => handleOpenSelectTime(true)}>
-          <Typography alignCenter sx={{ color: 'black' }}>{`${currentYearMonth.year}年${currentYearMonth.month}月`}</Typography>
-          <IconButton sx={{ padding: 0 }} >
-            <ChevronRightIcon />
-          </IconButton>
+
+      {/* 日期选择与图标 */}
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: "15px" }}>
+        <Box
+          sx={{ display: 'flex', alignItems: 'center', backgroundColor: '#fff', padding: '6px 14px', borderRadius: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', cursor: 'pointer' }}
+          onClick={() => handleOpenSelectTime(true)}
+        >
+          <Typography alignCenter sx={{ color: '#444', fontWeight: 700 }}>{`${currentYearMonth.year}年${currentYearMonth.month}月`}</Typography>
+          <ChevronRightIcon sx={{ color: '#888', ml: 0.5, fontSize: '1.2rem' }} />
         </Box>
-        <IconButton sx={{ padding: 0 }}>
-          <CelebrationIcon />
+        <IconButton sx={{ backgroundColor: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', borderRadius: '12px' }}>
+          <CelebrationIcon sx={{ color: '#FFB74D' }} />
         </IconButton>
       </Box>
-      <Paper sx={{ width: '100%', borderRadius: "10px" }}>
-        <Box sx={{ display: 'flex', flexDirection: "column", padding: "10px" }}>
-          <Box sx={{ display: 'flex', justifyContent: "space-between" }}>
-            <Box>
-              <Typography variant="h8" sx={{ color: "#f55846" }}>月支出</Typography>
-              <Typography variant="h4" sx={{ fontWeight: "bold", paddingTop: 1, paddingBottom: 1 }}>{totalExpenditure}</Typography>
+
+      {/* 核心数据展示卡片 */}
+      <Box >
+        <Paper
+          elevation={0}
+          sx={{
+            width: '100%',
+            boxSizing: 'border-box', // 确保 padding 被包含在 width 内，不撑大卡片
+            borderRadius: "20px",
+            background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
+            padding: "24px 20px",
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          {/* 红色点缀装饰 */}
+          <Box sx={{ position: 'absolute', top: -30, right: -20, width: 80, height: 80, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,99,71,0.08) 0%, rgba(255,255,255,0) 70%)' }} />
+
+          <Box sx={{ display: 'flex', flexDirection: "column" }}>
+            {/* 上半部分：支出与预算 */}
+            <Box sx={{ display: 'flex', justifyContent: "space-between", mb: 2 }}>
+              <Box>
+                <Typography variant="caption" sx={{ color: "#888", fontWeight: 700 }}>月支出 (元)</Typography>
+                <Typography variant="h3" sx={{ fontWeight: 800, color: "#333", mt: 0.5, letterSpacing: '-1px' }}>{totalExpenditure}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', flexDirection: "column", alignItems: "flex-end" }}>
+                <Typography variant="caption" sx={{ color: "#888", fontWeight: 700 }}>月预算 (元)</Typography>
+                {
+                  !budgetInputShow &&
+                  <Typography variant="h6" sx={{ fontWeight: 800, color: "#555", mt: 0.5 }} onClick={() => setBudgetInputShow(true)}>
+                    {Number(budget).toFixed(2)}
+                  </Typography>
+                }
+                {
+                  budgetInputShow &&
+                  <TextField
+                    variant="standard"
+                    size="small"
+                    sx={{ width: '80px', mt: 0.5 }}
+                    type='number'
+                    autoFocus
+                    value={budget}
+                    onChange={(e) => handleBudgetChange(e.target.value)}
+                    onBlur={() => {
+                      setBudgetInputShow(false);
+                      props.handleUpdateData();
+                    }}
+                    InputProps={{ disableUnderline: true, sx: { fontWeight: 800, color: "#555", borderBottom: '2px solid #FF6347', pb: 0.5 } }}
+                  />
+                }
+              </Box>
             </Box>
-            <Box sx={{ display: 'flex', flexDirection: "column", alignItems: "flex-end" }}>
-              <Typography variant="h8" sx={{ color: "#f55846" }}>月预算</Typography>
-              {
-                !budgetInputShow &&
-                <Typography variant="h4" sx={{ fontWeight: "bold", paddingTop: 1, paddingBottom: 1 }} onClick={() => setBudgetInputShow(true)}>{budget}</Typography>
-              }
-              {
-                budgetInputShow &&
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  sx={{ width: '100px' }}
-                  type='number'
-                  autoFocus
-                  value={budget}
-                  // value={expenditureValue}
-                  onChange={(e) => handleBudgetChange(e.target.value)}
-                  // onFocus={() => handleExpenditureFocus(item.id, item.expenditure ? "-" + item.expenditure : item.income)}
-                  onBlur={() => {
-                    setBudgetInputShow(false);
-                    props.handleUpdateData();
-                  }}
-                />
-              }
+
+            {/* 下半部分：收入与结余 */}
+            <Box sx={{ display: 'flex', justifyContent: "space-between", pt: 2, borderTop: '2px dashed #f0f0f0' }}>
+              <Box>
+                <Typography variant="caption" sx={{ color: "#888", fontWeight: 700 }}>月收入</Typography>
+                <Typography variant="subtitle1" sx={{ fontWeight: 800, color: "#66BB6A", mt: 0.5 }}>{totalIncome}</Typography>
+              </Box>
+              <Box sx={{ textAlign: 'right' }}>
+                <Typography variant="caption" sx={{ color: "#888", fontWeight: 700 }}>月结余</Typography>
+                <Typography variant="subtitle1" sx={{ fontWeight: 800, color: balance < 0 ? "#FF6347" : "#66BB6A", mt: 0.5 }}>{balance > 0 ? '+' : ''}{balance}</Typography>
+              </Box>
             </Box>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: "space-between" }}>
-            <Box>
-              <Typography variant="h8">月收入</Typography>
-              <Typography variant="h8" sx={{ paddingLeft: 1, color: "#51cf66" }}>{totalIncome}</Typography>
-            </Box>
-            <Box>
-              <Typography variant="h8" >月结余</Typography>
-              <Typography variant="h8" sx={{ paddingLeft: 1, color: balance < 0 ? "#ff6b6b" : "#51cf66" }}>{balance}</Typography>
-            </Box>
-          </Box>
-        </Box>
-      </Paper >
+        </Paper>
+      </Box>
       {/* 数据组件 */}
       <Box sx={{ flex: 1, overflowY: "auto", marginTop: "10px", marginBottom: '10px', borderRadius: "10px" }}>
         <DataCar data={data} handleUpdateData={props.handleUpdateData} />

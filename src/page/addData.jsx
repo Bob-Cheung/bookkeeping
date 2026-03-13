@@ -100,7 +100,7 @@ const SelectTime = (props) => {
 									flexDirection: "column",
 									alignItems: "center",
 									borderRadius: "50%",
-									backgroundColor: selectedIndex === index ? "#ffd700" : "#e9e9e9", // 判断是否选中
+									backgroundColor: selectedIndex === index ? transactionType === 0 ? "#FF6347" : "#66BB6A" : "#e9e9e9", // 判断是否选中
 									justifyContent: "center",
 								}}
 							>
@@ -111,7 +111,6 @@ const SelectTime = (props) => {
 						</Box>
 					))}
 				</Box>
-
 
 				{/* 键盘 */}
 				<Box sx={{ width: "100%", height: "400px", position: "fixed", bottom: "0", left: "0", right: "0", display: openKeyboard ? "flex" : "none", }}>

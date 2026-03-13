@@ -20,28 +20,28 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
 
 const iconList = [
-  { icon: <RestaurantIcon sx={{ fontSize: 25 }} />, name: "餐饮", color: "#FF6347" },
-  { icon: <DirectionsBusIcon sx={{ fontSize: 25 }} />, name: "交通", color: "#00BFFF" },
-  { icon: <DirectionsCarIcon sx={{ fontSize: 25 }} />, name: "汽车", color: "#FFD700" },
-  { icon: <HouseIcon sx={{ fontSize: 25 }} />, name: "住宿", color: "#008000" },
-  { icon: <PhoneInTalkIcon sx={{ fontSize: 25 }} />, name: "通讯", color: "#FF69B4" },
+  { icon: <RestaurantIcon sx={{ fontSize: 25 }} />, name: "餐饮", color: "#FF8A65" },
+  { icon: <DirectionsBusIcon sx={{ fontSize: 25 }} />, name: "交通", color: "#4FC3F7" },
+  { icon: <DirectionsCarIcon sx={{ fontSize: 25 }} />, name: "汽车", color: "#FFD54F" },
+  { icon: <HouseIcon sx={{ fontSize: 25 }} />, name: "住宿", color: "#81C784" },
+  { icon: <PhoneInTalkIcon sx={{ fontSize: 25 }} />, name: "通讯", color: "#F06292" },
   // { icon: <AccountBalanceWalletIcon sx={{ fontSize: 25 }} />, name: "工资", color: "#FFA500" },
-  { icon: <SchoolIcon sx={{ fontSize: 25 }} />, name: "学习", color: "#FF00FF" },
-  { icon: <FlightTakeoffIcon sx={{ fontSize: 25 }} />, name: "旅行", color: "#FF0000" },
-  { icon: <LiquorIcon sx={{ fontSize: 25 }} />, name: "烟酒", color: "#800080" },
-  { icon: <AddShoppingCartIcon sx={{ fontSize: 25 }} />, name: "购物", color: "#00FFFF" },
-  { icon: <RedeemIcon sx={{ fontSize: 25 }} />, name: "礼金", color: "#008080" },
-  { icon: <PetsIcon sx={{ fontSize: 25 }} />, name: "宠物", color: "#FFC0CB" },
-  { icon: <MedicalServicesIcon sx={{ fontSize: 25 }} />, name: "医疗", color: "#FFA500" },
-  { icon: <PoolIcon sx={{ fontSize: 25 }} />, name: "运动", color: "#FF8C00" },
-  { icon: <PhoneIphoneIcon sx={{ fontSize: 25 }} />, name: "数码", color: "#00FF00" },
+  { icon: <SchoolIcon sx={{ fontSize: 25 }} />, name: "学习", color: "#BA68C8" },
+  { icon: <FlightTakeoffIcon sx={{ fontSize: 25 }} />, name: "旅行", color: "#E57373" },
+  { icon: <LiquorIcon sx={{ fontSize: 25 }} />, name: "烟酒", color: "#9575CD" },
+  { icon: <AddShoppingCartIcon sx={{ fontSize: 25 }} />, name: "购物", color: "#4DD0E1" },
+  { icon: <RedeemIcon sx={{ fontSize: 25 }} />, name: "礼金", color: "#4DB6AC" },
+  { icon: <PetsIcon sx={{ fontSize: 25 }} />, name: "宠物", color: "#A1887F" },
+  { icon: <MedicalServicesIcon sx={{ fontSize: 25 }} />, name: "医疗", color: "#FFB74D" },
+  { icon: <PoolIcon sx={{ fontSize: 25 }} />, name: "运动", color: "#90A4AE" },
+  { icon: <PhoneIphoneIcon sx={{ fontSize: 25 }} />, name: "数码", color: "#AED581" },
 ];
 
 const incomeIconList = [
-  { icon: <LocalAtmIcon sx={{ fontSize: 25 }} />, name: "工资", color: "#FFA500" },
-  { icon: <CandlestickChartIcon sx={{ fontSize: 25 }} />, name: "理财", color: "#0000FF" },
-  { icon: <WorkHistoryIcon sx={{ fontSize: 25 }} />, name: "兼职", color: "#008000" },
-  { icon: <AttachMoneyIcon sx={{ fontSize: 25 }} />, name: "其它", color: "#FFD700" },
+  { icon: <LocalAtmIcon sx={{ fontSize: 25 }} />, name: "工资", color: "#FFCA28" },
+  { icon: <CandlestickChartIcon sx={{ fontSize: 25 }} />, name: "理财", color: "#42A5F5" },
+  { icon: <WorkHistoryIcon sx={{ fontSize: 25 }} />, name: "兼职", color: "#66BB6A" },
+  { icon: <AttachMoneyIcon sx={{ fontSize: 25 }} />, name: "其它", color: "#FFA726" },
 ];
 
 
