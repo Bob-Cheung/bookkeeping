@@ -1,3 +1,4 @@
+import { iconList, incomeIconList } from './page/icon';
 // Android获取文件访问文件的权限
 function requestStoragePermission() {
 	return new Promise((resolve, reject) => {
@@ -705,6 +706,15 @@ const generateRandomColor = () => {
 	return `#${toHex(r)}${toHex(g)}${toHex(v)}`;
 };
 
+// 根据类型获取图标
+const getIconByType = (iconType) => {
+	const newIconList = [...iconList, ...incomeIconList];
+	const matchItem = newIconList.find(item => item.name === iconType);
+	const icon = { icon: matchItem?.icon, color: matchItem?.color };
+	console.log("icon", icon);
+	return icon || <span style={{ color: 'white', fontSize: 16 }}>●</span>;
+};
+
 export {
 	ensureMainFolder,
 	appendDataByMonth,
@@ -716,5 +726,6 @@ export {
 	deleteData,
 	modifyData,
 	updateDays,
-	assembleChartData
+	assembleChartData,
+	getIconByType
 };
