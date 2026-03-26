@@ -71,7 +71,7 @@ const MyPage = () => {
                 <Box>
                   <Typography>版本号</Typography>
                 </Box>
-                <Typography>V1.0.2</Typography>
+                <Typography>V1.0.3</Typography>
               </Box>
             </Box>
           </Box>
