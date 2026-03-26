@@ -72,9 +72,17 @@ const DataCar = (props) => {
   };
 
   const formatDate = (dateStr) => dateStr.slice(5); // 01-01
-
   return (
     <>
+      {
+        props.data.length === 0 &&
+        <Paper
+          elevation={3}
+          sx={{ width: '100%', borderRadius: '20px', margin: '10px 0', height: "92%", display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          <Typography color='textSecondary'>暂无数据</Typography>
+        </Paper>
+      }
       {Object.entries(groupedData).map(([date, items]) => {
         // console.log(date, items);
         let totalExpenditure = 0;
