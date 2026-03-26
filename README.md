@@ -18,15 +18,15 @@
 ### 🚀 开发需求
   待完善
 - 项目名称：记账应用
-- 技术栈：React、Cordova、MUI、ECharts、Android Studio、Node.js、npm
+- 技术栈：React、Cordova、MUI、Recharts、Android Studio、Node.js、npm
 - 功能需求：
   1. 记账功能，包括添加、编辑、删除和查询记账记录
-  2. 数据可视化，使用 ECharts 实现记账数据的图表展示
+  2. 数据可视化，使用 Recharts 实现记账数据的图表展示
   3. 移动端适配，使用 Cordova 实现移动设备上的记账应用
 - 界面设计：
   1. 主界面：展示记账记录列表，包括日期、金额、类型和备注等信息
   2. 添加/编辑界面：输入记账记录的详细信息，包括日期、金额、类型和备注等信息
-  3. 数据可视化界面：使用 recharts 实现记账数据的图表展示
+  3. 数据可视化界面：使用 Recharts 实现记账数据的图表展示
 - 数据存储：
   计划使用移动端的读取和写入功能文件，将记账记录存储在本地文件中，以便在移动设备上使用。
 
@@ -37,25 +37,36 @@
 ```
 .
 ├── public
-│   ├── favicon.ico
 │   ├── index.html
-│   └── manifest.json
+│   └── VERSION
 ├── src
 │   ├── components
 │   │   ├── dataCar.jsx
+│   │   ├── keyboard.jsx
+│   │   ├── linearProgressWithLabel.jsx
+│   │   ├── linesCharts.jsx
+│   │   ├── pieCharts.jsx
 │   │   ├── selectTime.jsx
+│   │   ├── settingsItem.jsx
 │   │   ├── simpleBottomNavigation.jsx
+│   │   ├── simpleSnackbar.jsx
 │   │   └── wheelColumn.jsx
 │   ├── page
+│   │   ├── addData.jsx
 │   │   ├── assetsPage.jsx
 │   │   ├── chartPage.jsx
 │   │   ├── home.jsx
+│   │   ├── icon.js
 │   │   └── mainContainer.jsx
 │   │   └── myPage.jsx
 │   ├── App.css
 │   ├── App.js
 │   ├── index.css
 │   ├── index.js
+│   ├── utils.js
+├── .env.production
+├── config.xml
+├── version-update.js
 
 ```
 ### 🚀 快速开始
