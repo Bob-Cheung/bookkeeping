@@ -127,7 +127,14 @@ const Home = (props) => {
   const handleSelectTimeConfirm = (year, month) => {
     handleOpenSelectTime(false);
     handleSelectTime(year, month);
-  }
+  };
+
+  useEffect(() => {
+    const overspendPopup = JSON.parse(localStorage.getItem("overspendPopup"));
+    if (overspendPopup === null) {
+      localStorage.setItem("overspendPopup", JSON.stringify(true));
+    };
+  }, []);
 
   return (
     <>
