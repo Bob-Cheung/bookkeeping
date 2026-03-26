@@ -526,6 +526,9 @@ const filterDataByDate = async (time, date) => {
 	let data;
 	if (window.cordova) {
 		data = await readDataByMonth(newTime);
+		if (!data) {
+			data = [];
+		}
 	} else {
 		let storedData = JSON.parse(localStorage.getItem("allData"));
 		if (storedData) {
