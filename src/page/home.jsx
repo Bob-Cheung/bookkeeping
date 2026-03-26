@@ -71,6 +71,12 @@ const Home = (props) => {
 
   // 计算当月总支出，总收入，结余
   const calculateTotal = (data) => {
+    if (data.length === 0) {
+      setTotalExpenditure(0);
+      setTotalIncome(0);
+      setBalance(0);
+      return;
+    };
     let totalExpenditure = 0.0;
     let totalIncome = 0.0;
     for (const record of data) {
