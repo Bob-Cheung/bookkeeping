@@ -1,30 +1,59 @@
 import { iconList, incomeIconList } from './page/icon';
 // Android获取文件访问文件的权限
+// function requestStoragePermission() {
+// 	return new Promise((resolve, reject) => {
+// 		if (!window.cordova.plugins || !window.cordova.plugins.permissions) {
+// 			// 没有权限插件就直接返回成功
+// 			resolve(true);
+// 			return;
+// 		};
+// 		const permissions = window.cordova.plugins.permissions;
+// 		// 检查权限
+// 		permissions.hasPermission(permissions.WRITE_EXTERNAL_STORAGE, status => {
+// 			if (status.hasPermission) {
+// 				resolve(true);
+// 			} else {
+// 				// 申请权限
+// 				permissions.requestPermission(permissions.WRITE_EXTERNAL_STORAGE, status2 => {
+// 					if (status2.hasPermission) {
+// 						resolve(true);
+// 					} else {
+// 						reject('没有存储权限');
+// 					}
+// 				}, err => reject({ msg: '权限申请失败', err }));
+// 			};
+// 		}, err => reject({ msg: '权限检测失败', err }));
+// 	});
+// };
+
 function requestStoragePermission() {
 	return new Promise((resolve, reject) => {
-		if (!window.cordova.plugins || !window.cordova.plugins.permissions) {
-			// 没有权限插件就直接返回成功
+		const perms = cordova.plugins.permissions;
+		let permission;
+
+		// 自动适配 Android 版本
+		if (device.platform === 'Android') {
+			const ver = parseInt(device.version);
+			permission = ver >= 13
+				? perms.READ_MEDIA_IMAGES
+				: perms.WRITE_EXTERNAL_STORAGE;
+		} else {
+			// 非安卓直接通过
 			resolve(true);
 			return;
-		};
-		const permissions = window.cordova.plugins.permissions;
-		// 检查权限
-		permissions.hasPermission(permissions.WRITE_EXTERNAL_STORAGE, status => {
+		}
+
+		perms.hasPermission(permission, (status) => {
 			if (status.hasPermission) {
 				resolve(true);
 			} else {
-				// 申请权限
-				permissions.requestPermission(permissions.WRITE_EXTERNAL_STORAGE, status2 => {
-					if (status2.hasPermission) {
-						resolve(true);
-					} else {
-						reject('没有存储权限');
-					}
-				}, err => reject({ msg: '权限申请失败', err }));
-			};
-		}, err => reject({ msg: '权限检测失败', err }));
+				perms.requestPermission(permission, (result) => {
+					result.hasPermission ? resolve(true) : reject('请开启存储权限');
+				}, (err) => reject('权限申请异常'));
+			}
+		}, (err) => reject('权限检查失败'));
 	});
-};
+}
 
 /**
  * 判断并创建主文件夹

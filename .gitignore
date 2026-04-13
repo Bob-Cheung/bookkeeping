@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 
+
 # testing
 /coverage
 
@@ -27,4 +28,4 @@ yarn-error.log*
 /plugins/
 /platforms/
 /www/
-
+/package-lock.json
