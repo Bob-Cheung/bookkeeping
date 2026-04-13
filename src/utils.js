@@ -1,44 +1,26 @@
 import { iconList, incomeIconList } from './page/icon';
+/* global cordova, device */  // 👈 就加这一行
 // Android获取文件访问文件的权限
-// function requestStoragePermission() {
-// 	return new Promise((resolve, reject) => {
-// 		if (!window.cordova.plugins || !window.cordova.plugins.permissions) {
-// 			// 没有权限插件就直接返回成功
-// 			resolve(true);
-// 			return;
-// 		};
-// 		const permissions = window.cordova.plugins.permissions;
-// 		// 检查权限
-// 		permissions.hasPermission(permissions.WRITE_EXTERNAL_STORAGE, status => {
-// 			if (status.hasPermission) {
-// 				resolve(true);
-// 			} else {
-// 				// 申请权限
-// 				permissions.requestPermission(permissions.WRITE_EXTERNAL_STORAGE, status2 => {
-// 					if (status2.hasPermission) {
-// 						resolve(true);
-// 					} else {
-// 						reject('没有存储权限');
-// 					}
-// 				}, err => reject({ msg: '权限申请失败', err }));
-// 			};
-// 		}, err => reject({ msg: '权限检测失败', err }));
-// 	});
-// };
+
 
 function requestStoragePermission() {
 	return new Promise((resolve, reject) => {
-		const perms = cordova.plugins.permissions;
+		const perms = window.cordova?.plugins?.permissions;
+
+		// 👇 关键：如果没有权限插件，直接通过（不崩溃）
+		if (!perms) {
+			resolve(true);
+			return;
+		}
+
 		let permission;
 
-		// 自动适配 Android 版本
-		if (device.platform === 'Android') {
-			const ver = parseInt(device.version);
+		if (window.device?.platform === 'Android') {
+			const ver = parseInt(window.device?.version || '0');
 			permission = ver >= 13
 				? perms.READ_MEDIA_IMAGES
 				: perms.WRITE_EXTERNAL_STORAGE;
 		} else {
-			// 非安卓直接通过
 			resolve(true);
 			return;
 		}
@@ -49,9 +31,9 @@ function requestStoragePermission() {
 			} else {
 				perms.requestPermission(permission, (result) => {
 					result.hasPermission ? resolve(true) : reject('请开启存储权限');
-				}, (err) => reject('权限申请异常'));
+				}, () => reject('权限申请异常'));
 			}
-		}, (err) => reject('权限检查失败'));
+		}, () => reject('权限检查失败'));
 	});
 }
 
